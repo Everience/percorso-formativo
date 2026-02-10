@@ -1,9 +1,6 @@
 :root {
   /* Colors */
   --color-text: #FFFFFF;
-  --color-course-elem: rbga(255, 255, 255, 0.04);
-  --color-course-completed: rgba(88, 103, 203, 0.32);
-  --color-course-in-progress: rgba(228, 13, 124, 0.2);
   --color-dev-modal: #100138;
   --color-tech-modal: #3F004E;
 
@@ -26,6 +23,9 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+
+  /* Padding */
+  --padding-course-elem: 0.75rem 1.875rem;
 
   /* Border Radius */
   --radius-course-elem: 1.25rem;

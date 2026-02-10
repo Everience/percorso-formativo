@@ -1,0 +1,19 @@
+<div class="glass-elem" [class.glass-elem--completed]="courseState === 'completed'" [class.glass-elem--in-progress]="courseState === 'in-progress'">
+  <div class="glass-elem__content">
+    @if (svgIcon) {
+      <div class="glass-elem__icon" [innerHTML]="svgIcon" [style.width]="svgSize" [style.height]="svgSize"></div>
+    }
+    @if (text) {
+      <span class="glass-elem__text">{{ text }}</span>
+    }
+  </div>
+  <div class="glass-elem__material">
+    <div class="glass-elem__edge-reflection"></div>
+    <div class="glass-elem__emboss-reflection"></div>
+    <div class="glass-elem__refraction"></div>
+    <div class="glass-elem__blur"></div>
+    <div class="glass-elem__blend-layers"></div>
+    <div class="glass-elem__blend-edge"></div>
+    <div class="glass-elem__highlight"></div>
+  </div>
+</div>
