@@ -28,13 +28,14 @@
 
   &__content {
     position: relative;
-    display: block;
+    display: flex;
     z-index: 100;
     overflow: hidden;
     pointer-events: auto;
   }
 
   &__text {
+    text-align: center;
     color: inherit;
   }
 
