@@ -1,4 +1,4 @@
-<div class="glass-elem" [class.glass-elem--completed]="courseState === 'completed'" [class.glass-elem--in-progress]="courseState === 'in-progress'" [class.glass-elem--has-icon]="svgIcon">
+<div class="glass-elem" [class.glass-elem--completed]="courseState === 'completed'" [class.glass-elem--in-progress]="courseState === 'in-progress'" [class.glass-elem--link]="type === 'link'" [class.glass-elem--has-icon]="svgIcon">
   <div class="glass-elem__content">
     @if (text) {
       <span class="glass-elem__text" [innerHTML]="text"></span>
