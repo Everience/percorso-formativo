@@ -42,6 +42,10 @@
   color: var(--color-text);
 }
 
+img {
+  user-select: none;
+}
+
 body {
   background-size: cover;
   background-position: center;
