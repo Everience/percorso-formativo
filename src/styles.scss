@@ -11,6 +11,7 @@
   --font-size-welcome: 1.5rem;
   --font-size-title: 3rem;
   --font-size-course-elem: 1.5rem;
+  --font-size-cert: 1.25rem;
   --font-size-course-status: 1rem;
   --font-size-course-title-1: 2rem;
   --font-size-course-description: 1rem;
@@ -26,9 +27,11 @@
 
   /* Padding */
   --padding-course-elem: 0.6rem 1.875rem 0.9rem 1.875rem;
+  --padding-cert: 0.4rem 1.875rem 0.7rem 1.875rem;
 
   /* Border Radius */
   --radius-course-elem: 1.25rem;
+  --radius-cert: 3rem;
   --radius-link-elem: 1rem;
   --radius-course-status: 1.25rem;
   --radius-course-platform: 0.5rem;
