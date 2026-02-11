@@ -32,3 +32,18 @@
   --radius-course-status: 1.25rem;
   --radius-course-platform: 0.5rem;
 }
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  color: var(--color-text);
+}
+
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
