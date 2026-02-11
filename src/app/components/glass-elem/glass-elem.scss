@@ -28,13 +28,14 @@
 
   &__content {
     position: relative;
-    display: block;
+    display: flex;
     z-index: 100;
     overflow: hidden;
     pointer-events: auto;
   }
 
   &__text {
+    text-align: center;
     color: inherit;
   }
 
@@ -62,6 +63,14 @@
       height: 24px;
       user-select: none;
     }
+  }
+
+  &--link {
+    --corner-radius: var(--radius-link-elem);
+  }
+
+  &--link &__material::after {
+    background: rgba(81, 34, 208, 0.9);
   }
 
   &--has-icon {

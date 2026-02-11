@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 export class GlassElem {
   @Input() text?: string;
   @Input() courseState?: 'completed' | 'in-progress';
+  @Input() type: 'course' | 'link' = 'course';
   @Input() svgIcon?: string;
   @Input() alt?: string;
 
