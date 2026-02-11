@@ -9,7 +9,17 @@ import { CommonModule } from '@angular/common';
 })
 export class GlassElem {
   @Input() text?: string;
-  @Input() svgIcon?: string;
-  @Input() svgSize: string = '24px';
   @Input() courseState?: 'completed' | 'in-progress';
+  @Input() svgIcon?: string;
+  @Input() alt?: string;
+
+  getStatusIcon(): string | null {
+    if (this.courseState === 'completed') {
+      return '/images/statuses/completed.svg';
+    }
+    if (this.courseState === 'in-progress') {
+      return '/images/statuses/in-progress.svg';
+    }
+    return null;
+  }
 }

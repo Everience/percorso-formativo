@@ -15,6 +15,7 @@
   --refraction-width: calc((var(--softness) * 0.3));
   position: relative;
   overflow: visible;
+  max-width: 24rem;
   width: fit-content;
   padding: var(--padding-course-elem);
   display: flex;
@@ -23,6 +24,7 @@
   font-size: var(--font-size-course-elem);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
+  transition: 100ms ease-in;
 
   &__content {
     position: relative;
@@ -32,20 +34,53 @@
     pointer-events: auto;
   }
 
+  &__text {
+    color: inherit;
+  }
+
+  &--completed &__material::after {
+    background:
+      linear-gradient(rgba(88, 103, 203, 0.32), rgba(88, 103, 203, 0.32)),
+      linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
+  }
+
+  &--in-progress &__material::after {
+    background:
+      linear-gradient(rgba(228, 13, 124, 0.2), rgba(228, 13, 124, 0.2)),
+      linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
+  }
+
+  &__status-icon {
+    position: absolute;
+    top: -0.55rem;
+    right: -0.75rem;
+    z-index: 100;
+    pointer-events: none;
+
+    img {
+      width: 24px;
+      height: 24px;
+      user-select: none;
+    }
+  }
+
+  &--has-icon {
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+  }
+
   &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 
-    svg {
-      width: 100%;
-      height: 100%;
+    img {
+      width: 16px;
+      height: 16px;
+      user-select: none;
     }
-  }
-
-  &__text {
-    color: inherit;
   }
 
   &__material {
@@ -66,18 +101,6 @@
     background-color: rgba(255, 255, 255, 0.04);
   }
 
-  &--completed &__material::after {
-    background:
-      linear-gradient(rgba(88, 103, 203, 0.32), rgba(88, 103, 203, 0.32)),
-      linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
-  }
-
-  &--in-progress &__material::after {
-    background:
-      linear-gradient(rgba(228, 13, 124, 0.2), rgba(228, 13, 124, 0.2)),
-      linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
-  }
-
   &__material > div {
     position: absolute;
     inset: 0;
@@ -96,7 +119,7 @@
     border-radius: var(--corner-radius);
     padding: 1px;
     border: 0 solid transparent;
-    background: linear-gradient(210deg, hsla(0, 0%, 100%, 0.4) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.25) 100%);
+    background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.8) 0%, hsla(0, 0%, 0%, 0.4) 50%, hsla(0, 0%, 100%, 0.25) 100%);
     backdrop-filter: invert(0.15) opacity(1);
     mask: 
         linear-gradient(white 0 0) padding-box,
@@ -115,5 +138,14 @@
         linear-gradient(white 0 0) padding-box,
         linear-gradient(white 0 0) content-box;
     mask-composite: exclude, exclude;
+  }
+
+  &:active {
+    .glass-elem__material::after {
+      background-color: rgba(255, 255, 255, 0.09);
+    }
+    .glass-elem__material::before {
+      background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.6) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.05) 100%);
+    }
   }
 }
