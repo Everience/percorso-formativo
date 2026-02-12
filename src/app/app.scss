@@ -29,9 +29,9 @@ main {
   .cert {
     padding: var(--padding-cert);
     border-radius: var(--radius-cert);
-    font-size: var(--font-size-course-elem);
-    font-weight: var(--font-weight-semibold);
-    background: rgba(220, 191, 0, 0.3);
+    font-size: var(--font-size-cert);
+    font-weight: var(--font-weight-medium);
+    background: rgba(255, 233, 64, 0.4);
   }
 
   .row {
