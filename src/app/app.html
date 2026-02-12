@@ -4,48 +4,5 @@
 </header>
 
 <main>
-  <div class="container">
-    <div class="row">
-      <app-glass-elem text="SQL"></app-glass-elem>
-    </div>
-    <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
-    <div class="row">
-      <app-glass-elem text="Git"></app-glass-elem>
-    </div>
-    <div class="arrow-row">
-      <div class="arrow-row__left">
-        <img src="/images/arrows/s-left-top.svg" alt="Arrow" class="arrow">
-      </div>
-      <div class="arrow-row__right">
-        <img src="/images/arrows/s-right-top.svg" alt="Arrow" class="arrow">
-      </div>
-    </div>
-    <div class="row">
-      <div class="row__half row__half--left">
-        <app-glass-elem text="Front-End"></app-glass-elem>
-      </div>
-      <div class="row__half row__half--right">
-        <app-glass-elem text="Back-End"></app-glass-elem>
-      </div>
-    </div>
-    <div class="arrow-row">
-      <div class="arrow-row__left">
-        <img src="/images/arrows/s-left-bottom.svg" alt="Arrow" class="arrow">
-      </div>
-      <div class="arrow-row__right">
-        <img src="/images/arrows/s-right-bottom.svg" alt="Arrow" class="arrow">
-      </div>
-    </div>
-    <div class="row">
-      <app-glass-elem text="Business Intelligence"></app-glass-elem>
-    </div>
-    <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
-    <div class="row">
-      <app-glass-elem text="Scripting"></app-glass-elem>
-    </div>
-    <img src="/images/arrows/straight-l.svg" alt="Arrow" class="arrow">
-    <div class="row">
-      <app-glass-elem text="Visualizza i corsi tech" type="link"></app-glass-elem>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </main>
