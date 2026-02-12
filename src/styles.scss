@@ -50,9 +50,16 @@ img {
 }
 
 body {
-  background-image: url('/images/backgrounds/bg-dev.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
+  &.dev {
+    background-image: url('/images/backgrounds/bg-dev.jpg');
+  }
+
+  &.tech {
+    background-image: url('/images/backgrounds/bg-tech.jpg');
+  }
 }
