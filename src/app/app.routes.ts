@@ -8,6 +8,12 @@ export const routes: Routes = [
         .then(m => m.Dev)
   },
   {
+    path: 'tech',
+    loadComponent: () =>
+      import('./roadmaps/tech/tech')
+        .then(m => m.Tech)
+  },
+  {
     path: '**',
     redirectTo: 'dev',
     pathMatch: 'full'

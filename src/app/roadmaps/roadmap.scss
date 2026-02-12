@@ -4,6 +4,15 @@
   align-items: center;
 }
 
+.cert {
+  padding: var(--padding-cert);
+  border-radius: var(--radius-cert);
+  font-size: var(--font-size-cert);
+  font-weight: var(--font-weight-medium);
+  background: rgba(255, 233, 64, 0.4);
+  cursor: default;
+}
+
 .row {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
