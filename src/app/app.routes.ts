@@ -2,20 +2,34 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'dev',
+    path: 'login',
     loadComponent: () =>
-      import('./roadmaps/dev/dev')
-        .then(m => m.Dev)
+      import('./pages/login/login')
+        .then(m => m.Login)
   },
   {
-    path: 'tech',
+    path: '',
     loadComponent: () =>
-      import('./roadmaps/tech/tech')
-        .then(m => m.Tech)
-  },
-  {
-    path: '**',
-    redirectTo: 'dev',
-    pathMatch: 'full'
+      import('./layout/layout')
+        .then(m => m.Layout),
+    children: [
+      {
+        path: 'dev',
+        loadComponent: () =>
+          import('./roadmaps/dev/dev')
+            .then(m => m.Dev)
+      },
+      {
+        path: 'tech',
+        loadComponent: () =>
+          import('./roadmaps/tech/tech')
+            .then(m => m.Tech)
+      },
+      {
+        path: '**',
+        redirectTo: 'dev',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
