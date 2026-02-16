@@ -1,0 +1,41 @@
+<header>
+  <img src="./images/logo/logo.jpg" alt="Logo" (click)="refreshPage()">
+  <h2>Registrati</h2>
+</header>
+<main>
+  <form (submit)="onSubmit($event)">
+    @if (signupError()) {
+      <div class="error-banner">
+        <span>{{ signupError() }}</span>
+        <button type="button" class="error-close" (click)="dismissError()">
+          <img src="./images/icons/close.svg" alt="Close">
+        </button>
+      </div>
+    }
+
+    <div class="form-field">
+      <label for="firstName">Nome</label>
+      <input id="firstName" type="text" [formField]="signupForm.firstName" autocomplete="given-name" />
+    </div>
+
+    <div class="form-field">
+      <label for="lastName">Cognome</label>
+      <input id="lastName" type="text" [formField]="signupForm.lastName" autocomplete="family-name" />
+    </div>
+
+    <div class="form-field">
+      <label for="username">Email</label>
+      <div class="email-input-group">
+        <input id="username" type="text" [formField]="signupForm.username" autocomplete="username" />
+        <span class="email-suffix">@everience.com</span>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input id="password" type="password" [formField]="signupForm.password" autocomplete="new-password" />
+    </div>
+
+    <button type="submit">Registrati</button>
+  </form>
+</main>
