@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 
 interface LoginData {
@@ -8,7 +9,7 @@ interface LoginData {
 
 @Component({
   selector: 'app-login',
-  imports: [FormField],
+  imports: [FormField, RouterLink],
   templateUrl: './login.html',
   styleUrl: '../auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

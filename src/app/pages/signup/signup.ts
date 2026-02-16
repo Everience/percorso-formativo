@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 
 interface SignupData {
@@ -10,7 +11,7 @@ interface SignupData {
 
 @Component({
   selector: 'app-signup',
-  imports: [FormField],
+  imports: [FormField, RouterLink],
   templateUrl: './signup.html',
   styleUrl: '../auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
