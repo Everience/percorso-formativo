@@ -1,0 +1,56 @@
+<div class="header">
+  <div class="status-select" [class.status-select--open]="statusDropdownOpen()" (click)="toggleDropdown(); $event.stopPropagation()">
+    <span class="status-select__text">{{ currentStatusLabel }}</span>
+    <div class="status-select__material">
+      <div class="status-select__edge-reflection"></div>
+      <div class="status-select__emboss-reflection"></div>
+      <div class="status-select__refraction"></div>
+      <div class="status-select__blur"></div>
+      <div class="status-select__blend-layers"></div>
+      <div class="status-select__blend-edge"></div>
+      <div class="status-select__highlight"></div>
+    </div>
+    @if (statusDropdownOpen()) {
+      <div class="status-select__dropdown">
+        @for (option of statusOptions; track option.value) {
+          <button
+            class="status-select__option"
+            [class.status-select__option--active]="option.value === currentStatus()"
+            (click)="selectStatus(option.value); $event.stopPropagation()"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+  <app-glass-elem svgIcon="/images/icons/close.svg" alt="Close" (click)="courseDetailService.close(); $event.stopPropagation()" />
+</div>
+
+<h1 class="title">{{ courseTitle() }}</h1>
+
+<p class="description">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
+  rhoncus blandit metus. Nulla eget tristique purus, non maximus augue.
+  Donec justo elit, consequat nec mollis at, tincidunt id sapien. Vivamus
+  vestibulum id nulla at molestie. Proin et magna tortor. Quisque mollis
+  tempus auctor. Sed luctus nulla vitae pulvinar euismod. Ut in eros
+  pharetra, aliquam erat sed, tincidunt nulla.
+</p>
+
+<div class="resources">
+  <div class="resources__header">
+    <h2 class="resources__title">Risorse</h2>
+    <div class="resources__line"></div>
+  </div>
+  <div class="resources__list">
+    <div class="resources__item">
+      <span class="resources__platform resources__platform--udemy">Udemy</span>
+      <a class="resources__link">Corso Udemy</a>
+    </div>
+    <div class="resources__item">
+      <span class="resources__platform resources__platform--youtube">YouTube</span>
+      <a class="resources__link">Corso YouTube</a>
+    </div>
+  </div>
+</div>

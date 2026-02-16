@@ -1,0 +1,217 @@
+.header {
+  margin: 3.25rem 1.75rem 0 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.38rem;
+}
+
+.status-select {
+  --corner-radius: var(--radius-course-status);
+  --softness: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1.5rem 0.55rem;
+  font-size: var(--font-size-course-status);
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+  user-select: none;
+  overflow: visible;
+
+  &__text {
+    position: relative;
+    z-index: 100;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  &__material {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  &__material::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    overflow: hidden;
+    border-radius: var(--corner-radius);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  &__material > div {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border-radius: var(--corner-radius);
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  &__material::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 11;
+    display: block;
+    border-radius: var(--corner-radius);
+    padding: 1px;
+    border: 0 solid transparent;
+    background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.8) 0%, hsla(0, 0%, 0%, 0.4) 50%, hsla(0, 0%, 100%, 0.25) 100%);
+    backdrop-filter: invert(0.15) opacity(1);
+    mask:
+      linear-gradient(white 0 0) padding-box,
+      linear-gradient(white 0 0) content-box;
+    mask-composite: exclude, exclude;
+  }
+
+  &__highlight {
+    z-index: 12;
+    display: block;
+    border-radius: var(--corner-radius);
+    padding: 1px;
+    border: 0 solid transparent;
+    backdrop-filter: brightness(1.2) contrast(1.6) saturate(1.2) opacity(1);
+    mask:
+      linear-gradient(white 0 0) padding-box,
+      linear-gradient(white 0 0) content-box;
+    mask-composite: exclude, exclude;
+  }
+
+  &:active {
+    .status-select__material::after {
+      background-color: rgba(255, 255, 255, 0.09);
+    }
+    .status-select__material::before {
+      background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.6) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.05) 100%);
+    }
+  }
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    background: #2A0034;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.75rem;
+    padding: 0.35rem;
+    min-width: 100%;
+    backdrop-filter: blur(12px);
+  }
+
+  &__option {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: var(--font-size-course-status);
+    font-weight: var(--font-weight-normal);
+    padding: 0.45rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: left;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &--active {
+      font-weight: var(--font-weight-medium);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+}
+
+.title {
+  padding: 0 2.5rem;
+  margin-top: 4rem;
+  font-size: var(--font-size-course-title-1);
+  font-weight: var(--font-weight-bold);
+}
+
+.description {
+  padding: 0 2.5rem;
+  margin-top: 1.25rem;
+  font-size: var(--font-size-course-description);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.7;
+}
+
+.resources {
+  margin-top: 4rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__title {
+    padding-left: 2.5rem;
+    font-size: var(--font-size-course-title-2);
+    font-weight: var(--font-weight-bold);
+  }
+
+  &__line {
+    margin-top: 0.4rem;
+    width: 20rem;
+    height: 1px;
+    border-radius: 1px;
+    background: #FFFFFF;
+  }
+
+  &__list {
+    padding-left: 2.5rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+  }
+
+  &__platform {
+    min-width: 4.4rem;
+    height: 1.38rem;
+    border-radius: var(--radius-course-platform);
+    font-size: var(--font-size-course-platform);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    text-align: center;
+    line-height: 1.38rem;
+
+    &--udemy {
+      background: #5022C3;
+    }
+
+    &--youtube {
+      background: #B60D0D;
+    }
+  }
+
+  &__link {
+    font-size: var(--font-size-course-link);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

@@ -6,3 +6,11 @@
 <main>
   <router-outlet></router-outlet>
 </main>
+
+@if (courseDetailService.selectedCourse()) {
+  <div class="overlay" (click)="courseDetailService.close()"></div>
+}
+
+<aside class="sidebar" [class.sidebar--open]="courseDetailService.selectedCourse()">
+  <app-course-details></app-course-details>
+</aside>

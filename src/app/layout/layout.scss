@@ -19,3 +19,40 @@ header {
 main {
   padding: 5rem 0 3.75rem 0;
 }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  overflow-y: auto;
+  width: 30rem;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+
+  :host-context(body.dev) & {
+    background: var(--color-dev-sidebar);
+  }
+
+  :host-context(body.tech) & {
+    background: var(--color-tech-sidebar);
+  }
+
+  &--open {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
