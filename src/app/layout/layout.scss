@@ -1,5 +1,13 @@
 header {
+  position: relative;
   padding-top: 3.75rem;
+
+  app-profile-menu {
+    position: absolute;
+    top: 2.25rem;
+    right: 3.25rem;
+    z-index: 50;
+  }
 
   h3, h1 {
     text-align: center;

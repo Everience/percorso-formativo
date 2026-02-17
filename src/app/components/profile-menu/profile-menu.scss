@@ -1,0 +1,119 @@
+.profile-menu {
+  position: relative;
+
+  &__avatar {
+    padding-bottom: 0.1rem;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: var(--font-weight-semibold);
+    background: linear-gradient(135deg, #EADDCA, #E0115F);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 3px rgba(229, 119, 149, 0.6);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  &__dropdown {
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    min-width: 14rem;
+    position: absolute;
+    top: calc(100% + 0.65rem);
+    right: -0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: dropdownIn 0.2s ease;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+    z-index: 200;
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__name {
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__role {
+    padding: 0.1rem 0.4rem;
+    border-radius: 1rem;
+    font-size: 0.6rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+
+    &--dev {
+      background: rgba(65, 105, 225, 0.25);
+      color: #8DB4FF;
+    }
+
+    &--tech {
+      background: rgba(180, 50, 210, 0.45);
+      color: #D9A0F0;
+    }
+  }
+
+  &__email {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-normal);
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__logout {
+    padding: 0.35rem 0.5rem 0.45rem 0.5rem;
+    border: none;
+    border-radius: 0.4rem;
+    background: none;
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-medium);
+    text-align: left;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 3, 62, 0.25);
+      color: #FFFFFF;
+    }
+  }
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

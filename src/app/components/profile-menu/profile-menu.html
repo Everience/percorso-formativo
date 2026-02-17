@@ -1,0 +1,20 @@
+<div class="profile-menu">
+  <button class="profile-menu__avatar" (click)="toggle()">
+    {{ initials }}
+  </button>
+
+  @if (isOpen()) {
+    <div class="profile-menu__dropdown">
+      <div class="profile-menu__user">
+        <div class="profile-menu__name-row">
+          <span class="profile-menu__name">{{ firstName }} {{ lastName }}</span>
+          <span class="profile-menu__role" [class]="'profile-menu__role--' + role">
+            {{ role === 'dev' ? 'Dev' : 'Tech' }}
+          </span>
+        </div>
+        <span class="profile-menu__email">{{ email }}</span>
+      </div>
+      <button class="profile-menu__logout" (click)="logout()">Logout</button>
+    </div>
+  }
+</div>
