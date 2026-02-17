@@ -4,14 +4,20 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/login/login')
+      import('./pages/auth/login/login')
         .then(m => m.Login)
   },
   {
     path: 'signup',
     loadComponent: () =>
-      import('./pages/signup/signup')
+      import('./pages/auth/signup/signup')
         .then(m => m.Signup)
+  },
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('./pages/errors/not-found/not-found')
+        .then(m => m.NotFound)
   },
   {
     path: '',
@@ -33,7 +39,7 @@ export const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'dev',
+        redirectTo: '/not-found',
         pathMatch: 'full'
       }
     ]

@@ -13,6 +13,7 @@
     font-size: 1.15rem;
     font-weight: var(--font-weight-semibold);
     background: linear-gradient(135deg, #EADDCA, #E0115F);
+    user-select: none;
     cursor: pointer;
     transition: box-shadow 0.2s ease, transform 0.15s ease;
 
