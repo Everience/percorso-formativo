@@ -1,0 +1,42 @@
+<span class="trigger" (click)="open()">Come accedere a Udemy</span>
+
+@if (isOpen()) {
+  <div class="modal-overlay" (click)="close()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal__close" (click)="close()">
+        <img src="./images/icons/close.svg" alt="Close">
+      </button>
+      <h2 class="modal__title">Come accedere a Udemy</h2>
+      <ol class="modal__steps">
+        <li>
+          <span>Apri la pagina di accesso di <a href="https://www.udemy.com/join/passwordless-auth/?locale=it_IT&next=https%3A%2F%2Fwww.udemy.com%2F%3Fpersist_locale%3D%26locale%3Dit_IT&response_type=html&action=login&mode" target="_blank" rel="noopener">Udemy</a></span>
+        </li>
+        <li>
+          <span>Inserisci l'email <strong>{{ sharedEmail }}</strong>
+            <button class="copy-btn" (click)="copyEmail()" [class.copy-btn--copied]="copied()">
+              @if (copied()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Copiato!
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copia
+              }
+            </button>
+          </span>
+        </li>
+        <li>
+          <span>Per ottenere il codice, apri <a href="https://helpline.sharepoint.com/sites/sp-prod-EVERIENCEITALIA?xsdata=MDV8MDJ8fGYwNDdhNWQyMTA5YzQyYTk2MWE1MDhkZTZlMTVjMTA1fGUxZmZlNDEzNjhkNjQ2MDNiYjRlN2U5NWMyZjBmNThkfDB8MHw2MzkwNjkyMzY4NDQ5MTMwNjF8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKRFFTSTZJbFJsWVcxelgwRlVVRk5sY25acFkyVmZVMUJQVEU5R0lpd2lWaUk2SWpBdU1DNHdNREF3SWl3aVVDSTZJbGRwYmpNeUlpd2lRVTRpT2lKUGRHaGxjaUlzSWxkVUlqb3hNWDA9fDF8TDJOb1lYUnpMekU1T2pVMVpXWXlZV1k1WldVek5qUTVOV1k1TkRFME1EUXhaakJpWVRjMVlqZ3pRSFJvY21WaFpDNTJNaTl0WlhOellXZGxjeTh4TnpjeE16STJPRGd6T1RJeXw0ZDViMWViMWRjZTk0MzliNjFhNTA4ZGU2ZTE1YzEwNXw4MzYyMGIwMzYzYmY0ZDdhYmY0MGZmYjAxNjY1MDgyYw%3D%3D&sdata=S1RKUWNLd2FFNDlyMXpWcS9iTVBWVzhBZWRnZ05WSWNsalczalZnR0ZNVT0%3D&ovuser=e1ffe413-68d6-4603-bb4e-7e95c2f0f58d%2Crabbi.hossain%40everience.com" target="_blank" rel="noopener">SharePoint</a> in una nuova scheda</span>
+        </li>
+        <li>
+          <span>Clicca su <strong>"Codici di accesso"</strong></span>
+        </li>
+        <li>
+          <span>Seleziona <strong>"Udemy"</strong> dal menu e inserisci la tua <strong>email aziendale</strong></span>
+        </li>
+        <li>
+          <span>Riceverai un'email da <strong>serviceaccount-italy</strong> con il codice OTP &mdash; inseriscilo su Udemy per completare l'accesso</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+}

@@ -58,4 +58,11 @@ export class CourseDetails {
       this.statusDropdownOpen.set(false);
     }
   }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.courseDetailService.selectedCourse()) {
+      this.courseDetailService.close();
+    }
+  }
 }
