@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "progetto-formativo": {
+    "percorso-formativo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "progetto-formativo:build:production"
+              "buildTarget": "percorso-formativo:build:production"
             },
             "development": {
-              "buildTarget": "progetto-formativo:build:development"
+              "buildTarget": "percorso-formativo:build:development"
             }
           },
           "defaultConfiguration": "development"
