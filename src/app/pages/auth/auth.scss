@@ -12,6 +12,7 @@ header {
 }
 
 main {
+  margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,6 +82,86 @@ main {
         font-size: 1.1rem;
         color: #000000;
         outline: none;
+      }
+
+      .role-picker {
+        width: 22.5rem;
+        display: flex;
+        gap: 0.5rem;
+
+        &__option {
+          flex: 1;
+          padding: 0 0.75rem;
+          border: 2px solid transparent;
+          border-radius: 1rem;
+          height: 2.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.45rem;
+          background-color: #D6D2E0;
+          cursor: pointer;
+          transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+          &--dev-selected {
+            background-color: #ECF0FC;
+            border-color: #5867C8;
+            box-shadow: 0 2px 8px rgba(88, 103, 200, 0.15);
+
+            .role-picker__label {
+              color: #2D3A8C;
+              font-weight: var(--font-weight-semibold);
+            }
+
+            .role-picker__badge--dev {
+              background: rgba(65, 105, 225, 0.18);
+              color: #3F59C0;
+            }
+          }
+
+          &--tech-selected {
+            background-color: #F3ECF8;
+            border-color: #9B4DCA;
+            box-shadow: 0 2px 8px rgba(155, 77, 202, 0.15);
+
+            .role-picker__label {
+              color: #4A1966;
+              font-weight: var(--font-weight-semibold);
+            }
+
+            .role-picker__badge--tech {
+              background: rgba(155, 50, 210, 0.16);
+              color: #7B3FA0;
+            }
+          }
+        }
+
+        &__label {
+          font-size: 0.95rem;
+          font-weight: var(--font-weight-normal);
+          color: #6B6580;
+          transition: color 0.2s ease, font-weight 0.2s ease;
+        }
+
+        &__badge {
+          padding: 0.1rem 0.4rem;
+          border-radius: 1rem;
+          font-size: 0.6rem;
+          font-weight: var(--font-weight-semibold);
+          letter-spacing: 0.08rem;
+          text-transform: uppercase;
+          transition: background-color 0.2s ease, color 0.2s ease;
+
+          &--dev {
+            background: rgba(88, 103, 200, 0.1);
+            color: #929CC8;
+          }
+
+          &--tech {
+            background: rgba(155, 77, 202, 0.08);
+            color: #B494C6;
+          }
+        }
       }
 
       .email-input-group {

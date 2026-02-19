@@ -24,6 +24,26 @@
     </div>
 
     <div class="form-field">
+      <label>Ruolo</label>
+      <div class="role-picker">
+        <button type="button"
+                class="role-picker__option"
+                [class.role-picker__option--dev-selected]="signupForm.role().value() === 'dev'"
+                (click)="selectRole('dev')">
+          <span class="role-picker__label">Sviluppatore</span>
+          <span class="role-picker__badge role-picker__badge--dev">Dev</span>
+        </button>
+        <button type="button"
+                class="role-picker__option"
+                [class.role-picker__option--tech-selected]="signupForm.role().value() === 'tech'"
+                (click)="selectRole('tech')">
+          <span class="role-picker__label">Help Desk</span>
+          <span class="role-picker__badge role-picker__badge--tech">Tech</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-field">
       <label for="username">Email</label>
       <div class="email-input-group">
         <input id="username" type="text" [formField]="signupForm.username" autocomplete="username" />
