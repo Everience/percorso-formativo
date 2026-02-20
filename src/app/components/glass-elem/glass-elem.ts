@@ -11,6 +11,7 @@ import { CourseDetailService } from '../../services/course-detail.service';
 export class GlassElem {
   @Input() text?: string;
   @Input() type: 'course' | 'link' = 'course';
+  @Input() courseId?: number;
   @Input() svgIcon?: string;
   @Input() alt?: string;
 
@@ -25,8 +26,8 @@ export class GlassElem {
 
   @HostListener('click')
   onClick(): void {
-    if (this.type === 'course' && this.text) {
-      this.courseDetailService.open(this.text);
+    if (this.type === 'course' && this.text && this.courseId != null) {
+      this.courseDetailService.open(this.text, this.courseId);
     }
   }
 

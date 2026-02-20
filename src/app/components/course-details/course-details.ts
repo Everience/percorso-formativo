@@ -1,5 +1,8 @@
-import { Component, computed, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { CourseDetailService, CourseStatus } from '../../services/course-detail.service';
+import { CourseService } from '../../services/course.service';
+import { Course, Resource } from '../../models/course.model';
 import { GlassElem } from '../glass-elem/glass-elem';
 
 interface StatusOption {
@@ -15,6 +18,7 @@ interface StatusOption {
 })
 export class CourseDetails {
   readonly courseDetailService = inject(CourseDetailService);
+  private readonly courseService = inject(CourseService);
   private readonly elRef = inject(ElementRef);
 
   readonly statusOptions: StatusOption[] = [
@@ -24,6 +28,9 @@ export class CourseDetails {
   ];
 
   readonly statusDropdownOpen = signal(false);
+  readonly courseDetail = signal<Course | null>(null);
+  readonly resources = signal<Resource[]>([]);
+  readonly detailLoading = signal(false);
 
   readonly currentStatus = computed<CourseStatus>(() => {
     const course = this.courseDetailService.selectedCourse();
@@ -35,6 +42,44 @@ export class CourseDetails {
     if (!raw) return '';
     return raw.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '');
   });
+
+  readonly courseDescription = computed(() => {
+    return this.courseDetail()?.description ?? '';
+  });
+
+  constructor() {
+    effect(onCleanup => {
+      const id = this.courseDetailService.selectedCourseId();
+      if (id == null) {
+        this.courseDetail.set(null);
+        this.resources.set([]);
+        return;
+      }
+
+      this.detailLoading.set(true);
+      const sub = forkJoin({
+        course: this.courseService.getCourseById(id),
+        resources: this.courseService.getResourcesByCourseId(id),
+      }).subscribe({
+        next: ({ course, resources }) => {
+          this.courseDetail.set(course);
+          this.resources.set(resources);
+          this.detailLoading.set(false);
+        },
+        error: () => {
+          this.courseDetail.set(null);
+          this.resources.set([]);
+          this.detailLoading.set(false);
+        },
+      });
+
+      onCleanup(() => sub.unsubscribe());
+    });
+  }
+
+  platformClass(platform: string): string {
+    return `resources__platform--${platform.toLowerCase()}`;
+  }
 
   get currentStatusLabel(): string {
     return this.statusOptions.find(o => o.value === this.currentStatus())?.label ?? '';

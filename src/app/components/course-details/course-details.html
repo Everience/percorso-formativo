@@ -29,28 +29,27 @@
 
 <h1 class="title">{{ courseTitle() }}</h1>
 
-<p class="description">
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-  rhoncus blandit metus. Nulla eget tristique purus, non maximus augue.
-  Donec justo elit, consequat nec mollis at, tincidunt id sapien. Vivamus
-  vestibulum id nulla at molestie. Proin et magna tortor. Quisque mollis
-  tempus auctor. Sed luctus nulla vitae pulvinar euismod. Ut in eros
-  pharetra, aliquam erat sed, tincidunt nulla.
-</p>
+@if (detailLoading()) {
+  <p class="description description--loading">Caricamento...</p>
+} @else if (courseDescription()) {
+  <p class="description">{{ courseDescription() }}</p>
+}
 
-<div class="resources">
-  <div class="resources__header">
-    <h2 class="resources__title">Risorse</h2>
-    <div class="resources__line"></div>
-  </div>
-  <div class="resources__list">
-    <div class="resources__item">
-      <span class="resources__platform resources__platform--udemy">Udemy</span>
-      <a class="resources__link">Corso Udemy</a>
+@if (!detailLoading() && resources().length > 0) {
+  <div class="resources">
+    <div class="resources__header">
+      <h2 class="resources__title">Risorse</h2>
+      <div class="resources__line"></div>
     </div>
-    <div class="resources__item">
-      <span class="resources__platform resources__platform--youtube">YouTube</span>
-      <a class="resources__link">Corso YouTube</a>
+    <div class="resources__list">
+      @for (resource of resources(); track resource.id) {
+        <a class="resources__item" [href]="resource.video_url" target="_blank" rel="noopener noreferrer">
+          <span class="resources__platform" [class]="platformClass(resource.platform)">
+            {{ resource.platform }}
+          </span>
+          <span class="resources__link">{{ resource.title }}</span>
+        </a>
+      }
     </div>
   </div>
-</div>
+}
