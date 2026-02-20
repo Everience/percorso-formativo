@@ -43,4 +43,6 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
+node_modules/
 .env
+firebase-key.json

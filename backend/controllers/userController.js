@@ -2,11 +2,11 @@ const UserModel = require('../models/userModel');
 
 exports.getUserById = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await UserModel.findById(userId);
-
+        const uidFirebase = req.user.uid;
+        const user = await UserModel.findByUid(uidFirebase);
+        
         if (!user) {
-            return res.status(404).json({ message: 'Utente non trovato' });
+            return res.status(404).json({ message:'Utente non trovato nel DB SQL' });
         }
 
         res.status(200).json(user);
@@ -18,13 +18,13 @@ exports.getUserById = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
-        const { uid } = req.body; 
+        const uidFirebase = req.user.uid;
 
-        if (!uid) {
-            return res.status(400).json({ message: 'UID mancante' });
+        if (!uidFirebase) {
+            return res.status(400).json({ message: 'UID mancante nel token Firebase' });
         }
 
-        const user = await UserModel.findByUid(uid);
+        const user = await UserModel.findByUid(uidFirebase);
         
         if (user) {
             return res.status(200).json(user);
@@ -41,19 +41,20 @@ exports.loginUser = async (req, res) => {
 //sarebbe il register
 exports.addUserToDB = async (req, res) => {
     try {
-        const { uid, email, firstName, lastName, role } = req.body;
+        const uidFirebase = req.user.uid;
+        const { firstName, lastName, email, role } = req.body;
 
-        if (!uid || !email) {
+        if (!uidFirebase || !email) {
             return res.status(400).json({ message: 'Dati mancanti (UID o Email)' });
         }
 
-        const existingUser = await UserModel.findByUid(uid);
+        const existingUser = await UserModel.findByUid(uidFirebase);
         if (existingUser) {
             return res.status(409).json({ message: 'Utente già registrato nel database' });
         }
 
         const newUserId = await UserModel.addUserToDB({
-            uid,
+            uid: uidFirebase,
             email,
             firstName: firstName || 'Nuovo',
             lastName: lastName || 'Utente',
