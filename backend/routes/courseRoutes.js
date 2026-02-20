@@ -9,6 +9,6 @@ router.get('/dashboard/me', verificaToken, courseController.getUserDashboard);
 router.get('/:id', courseController.getCourseById);
 router.get('/:id/resources', courseController.getResourcesByCourse);
 
-router.post('/:id', verificaToken, courseController.updateCourseStatus);
+router.patch('/:id/status', verificaToken, courseController.updateCourseStatus);
 
 module.exports = router;
