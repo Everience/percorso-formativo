@@ -12,7 +12,13 @@ app.use(bodyParser.json());
 
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const admin = require('firebase-admin');
 
+const serviceAccount = require('./firebase-key.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);

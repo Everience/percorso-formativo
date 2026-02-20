@@ -1,4 +1,5 @@
 const CourseModel = require('../models/courseModel');
+const UserModel = require('../models/userModel');
 
 // Get All Courses
 exports.getAllCourses = async (req, res) => {
@@ -38,13 +39,14 @@ exports.getResourcesByCourse = async (req, res) => {
 //getUserDashboard
 exports.getUserDashboard = async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const uidFirebase = req.user.uid;
 
-        if (!userId) {
-            return res.status(400).json({ message: 'User ID mancante' });
+        const user = await UserModel.findByUid(uidFirebase);
+        if (!user) {
+            return res.status(404).json({ message: 'Utente non trovato nel database' });
         }
 
-        const dashboardData = await CourseModel.findWithProgressByUserId(userId);
+        const dashboardData = await CourseModel.findWithProgressByUserId(user.id);
         
         res.status(200).json(dashboardData);
     } catch (error) {
@@ -56,10 +58,10 @@ exports.getUserDashboard = async (req, res) => {
 exports.updateCourseStatus = async (req, res) => {
     try {
         const courseId = req.params.id;
-        const { userId, status } = req.body;
+        const { status } = req.body;
 
-        if (!userId || !status) {
-            return res.status(400).json({ message: 'Dati mancanti (userId o status)' });
+        if (!status) {
+            return res.status(400).json({ message: 'Dati mancanti (status)' });
         }
 
         const validStatuses = ['not_started', 'in_progress', 'completed'];
@@ -67,8 +69,15 @@ exports.updateCourseStatus = async (req, res) => {
             return res.status(400).json({ message: 'Status non valido' });
         }
 
-        await CourseModel.updateStatus(userId, courseId, status);
+        const uidFirebase = req.user.uid;
         
+        const user = await UserModel.findByUid(uidFirebase);
+        
+        if (!user) {
+            return res.status(404).json({ message: 'Utente non trovato' });
+        }
+        await CourseModel.updateStatus(user.id, courseId, status);
+
         res.status(200).json({ message: 'Stato aggiornato con successo' });
 
     } catch (error) {
