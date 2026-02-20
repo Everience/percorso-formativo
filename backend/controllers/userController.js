@@ -58,7 +58,7 @@ exports.addUserToDB = async (req, res) => {
             email,
             firstName: firstName || 'Nuovo',
             lastName: lastName || 'Utente',
-            role: role || 'dev-user' 
+            role: role || 'tech' 
         });
      
         const user = await UserModel.findById(newUserId);
