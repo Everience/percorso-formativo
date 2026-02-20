@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: 'not-found',
     loadComponent: () =>
-      import('./pages/errors/not-found/not-found')
+      import('./pages/not-found/not-found')
         .then(m => m.NotFound)
   },
   {
@@ -28,14 +28,24 @@ export const routes: Routes = [
       {
         path: 'dev',
         loadComponent: () =>
-          import('./roadmaps/dev/dev')
-            .then(m => m.Dev)
+          import('./components/roadmap/roadmap')
+            .then(m => m.Roadmap),
+        data: {
+          category: 'dev',
+          oppositeRoute: '/tech',
+          oppositeLabel: 'Visualizza i corsi tech',
+        }
       },
       {
         path: 'tech',
         loadComponent: () =>
-          import('./roadmaps/tech/tech')
-            .then(m => m.Tech)
+          import('./components/roadmap/roadmap')
+            .then(m => m.Roadmap),
+        data: {
+          category: 'tech',
+          oppositeRoute: '/dev',
+          oppositeLabel: 'Visualizza i corsi dev',
+        }
       },
       {
         path: '**',

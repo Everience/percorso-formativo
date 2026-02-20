@@ -71,3 +71,16 @@
     }
   }
 }
+
+.roadmap-message {
+  padding: 2rem;
+  text-align: center;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.7;
+
+  &--error {
+    color: #ff6b6b;
+    opacity: 1;
+  }
+}

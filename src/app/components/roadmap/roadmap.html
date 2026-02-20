@@ -1,0 +1,93 @@
+@if (loading()) {
+  <div class="container">
+    <p class="roadmap-message">Caricamento...</p>
+  </div>
+} @else if (error()) {
+  <div class="container">
+    <p class="roadmap-message roadmap-message--error">{{ error() }}</p>
+  </div>
+} @else {
+  <div class="container">
+    @for (row of rows(); track $index) {
+      @if ($index > 0) {
+        @switch (getArrowPattern($index - 1)) {
+          @case ('straight') {
+            <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
+          }
+          @case ('split-s') {
+            <div class="arrow-row">
+              <div class="arrow-row__left">
+                <img src="/images/arrows/s-left-top.svg" alt="Arrow" class="arrow">
+              </div>
+              <div class="arrow-row__right">
+                <img src="/images/arrows/s-right-top.svg" alt="Arrow" class="arrow">
+              </div>
+            </div>
+          }
+          @case ('merge-s') {
+            <div class="arrow-row">
+              <div class="arrow-row__left">
+                <img src="/images/arrows/s-left-bottom.svg" alt="Arrow" class="arrow">
+              </div>
+              <div class="arrow-row__right">
+                <img src="/images/arrows/s-right-bottom.svg" alt="Arrow" class="arrow">
+              </div>
+            </div>
+          }
+          @case ('split-m') {
+            <div class="arrow-row">
+              <div class="arrow-row__left">
+                <img src="/images/arrows/m-left-top.svg" alt="Arrow" class="arrow">
+              </div>
+              <div class="arrow-row__right">
+                <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
+                <img src="/images/arrows/m-right-top.svg" alt="Arrow" class="arrow">
+              </div>
+            </div>
+          }
+          @case ('split-l') {
+            <div class="arrow-row">
+              <div class="arrow-row__left">
+                <img src="/images/arrows/l-left-top.svg" alt="Arrow" class="arrow">
+                <img src="/images/arrows/s-left-top.svg" alt="Arrow" class="arrow">
+              </div>
+              <div class="arrow-row__right">
+                <img src="/images/arrows/s-right-top.svg" alt="Arrow" class="arrow">
+                <img src="/images/arrows/l-right-top.svg" alt="Arrow" class="arrow">
+              </div>
+            </div>
+          }
+        }
+      }
+
+      @if (row.isLabel) {
+        <div class="cert">{{ row.items[0].title }}</div>
+      } @else {
+        <div class="row">
+          @if (row.leftHalf.length > 0) {
+            <div class="row__half row__half--left">
+              @for (item of row.leftHalf; track item.id) {
+                <app-glass-elem [text]="formatTitle(item.title)" [courseId]="item.id"></app-glass-elem>
+              }
+            </div>
+          }
+          @if (row.center) {
+            <app-glass-elem [text]="formatTitle(row.center.title)" [courseId]="row.center.id"></app-glass-elem>
+          }
+          @if (row.rightHalf.length > 0) {
+            <div class="row__half row__half--right">
+              @for (item of row.rightHalf; track item.id) {
+                <app-glass-elem [text]="formatTitle(item.title)" [courseId]="item.id"></app-glass-elem>
+              }
+            </div>
+          }
+        </div>
+      }
+    }
+
+    <img src="/images/arrows/straight-l.svg" alt="Arrow" class="arrow">
+    <div class="row">
+      <app-glass-elem [text]="oppositeLabel()" type="link" (click)="goToOpposite()"></app-glass-elem>
+    </div>
+  </div>
+}
