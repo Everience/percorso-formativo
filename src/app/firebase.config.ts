@@ -1,4 +1,4 @@
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyBMRVwYzJnMLu1yHBpE83qru9YmVBxopjs",
   authDomain: "everience-crm.firebaseapp.com",
   projectId: "everience-crm",

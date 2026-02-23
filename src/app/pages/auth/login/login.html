@@ -5,12 +5,12 @@
 <main>
   <form (submit)="onSubmit($event)">
     @if (loginError()) {
-      <div class="error-banner">
-        <span>{{ loginError() }}</span>
-        <button type="button" class="error-close" (click)="dismissError()">
-          <img src="./images/icons/close.svg" alt="Close">
-        </button>
-      </div>
+    <div class="error-banner">
+      <span>{{ loginError() }}</span>
+      <button type="button" class="error-close" (click)="dismissError()">
+        <img src="./images/icons/close.svg" alt="Close">
+      </button>
+    </div>
     }
 
     <div class="form-field">
@@ -29,7 +29,7 @@
       <input id="password" type="password" [formField]="loginForm.password" autocomplete="current-password" />
     </div>
 
-    <button type="submit">Accedi</button>
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Accesso...' : 'Accedi' }}</button>
   </form>
   <p class="auth-switch">Non hai un account? <a routerLink="/signup">Registrati</a></p>
 </main>

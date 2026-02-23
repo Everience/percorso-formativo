@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
+import { AuthService } from '../../../services/auth.service';
 
 interface LoginData {
   username: string;
@@ -16,6 +17,8 @@ interface LoginData {
 })
 export class Login {
   private readonly EMAIL_DOMAIN = '@everience.com';
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   loginModel = signal<LoginData>({
     username: '',
@@ -37,15 +40,43 @@ export class Login {
   }
 
   loginError = signal<string | null>(null);
+  loading = signal(false);
 
-  onSubmit(event: Event): void {
+  async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
-    // TODO: implement login logic once the backend is ready
-    this.loginError.set('Credenziali non valide.');
+    this.loginError.set(null);
+
+    const email = this.fullEmail();
+    const password = this.loginForm.password().value();
+
+    if (!email || !password) {
+      this.loginError.set('Inserisci email e password.');
+      return;
+    }
+
+    this.loading.set(true);
+
+    try {
+      const user = await this.authService.signIn(email, password);
+      this.router.navigate([`/${user.role}`]);
+    } catch (err: any) {
+      const code = err?.code || '';
+      if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        this.loginError.set('Credenziali non valide.');
+      } else if (code === 'auth/too-many-requests') {
+        this.loginError.set('Troppi tentativi. Riprova più tardi.');
+      } else if (err?.status === 404) {
+        this.loginError.set('Utente non registrato. Effettua la registrazione.');
+      } else {
+        this.loginError.set('Errore durante il login. Riprova.');
+      }
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   onForgotPassword(): void {
-    // TODO: implement forgot-password flow once the backend is ready
+    // TODO: implement forgot-password flow
   }
 
   dismissError(): void {

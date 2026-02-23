@@ -1,14 +1,18 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./pages/auth/login/login')
         .then(m => m.Login)
   },
   {
     path: 'signup',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./pages/auth/signup/signup')
         .then(m => m.Signup)
@@ -21,6 +25,7 @@ export const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./layout/layout')
         .then(m => m.Layout),
@@ -46,6 +51,11 @@ export const routes: Routes = [
           oppositeRoute: '/dev',
           oppositeLabel: 'Visualizza i corsi dev',
         }
+      },
+      {
+        path: '',
+        redirectTo: '/login',
+        pathMatch: 'full'
       },
       {
         path: '**',

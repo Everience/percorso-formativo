@@ -1,5 +1,5 @@
 <div class="error-page">
-  <img class="error-page__logo" src="./images/logo/logo.jpg" alt="Logo" routerLink="/dev">
+  <img class="error-page__logo" src="./images/logo/logo.jpg" alt="Logo" [routerLink]="homeRoute()">
 
   <span class="error-page__code">404</span>
   <h1 class="error-page__title">Pagina non trovata</h1>
@@ -7,5 +7,5 @@
     La pagina che stai cercando non esiste o potrebbe essere stata spostata.
   </p>
 
-  <a class="error-page__action" routerLink="/tech">Torna alla home</a>
+  <a class="error-page__action" [routerLink]="homeRoute()">Torna alla home</a>
 </div>

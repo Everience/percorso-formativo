@@ -5,12 +5,12 @@
 <main>
   <form (submit)="onSubmit($event)">
     @if (signupError()) {
-      <div class="error-banner">
-        <span>{{ signupError() }}</span>
-        <button type="button" class="error-close" (click)="dismissError()">
-          <img src="./images/icons/close.svg" alt="Close">
-        </button>
-      </div>
+    <div class="error-banner">
+      <span>{{ signupError() }}</span>
+      <button type="button" class="error-close" (click)="dismissError()">
+        <img src="./images/icons/close.svg" alt="Close">
+      </button>
+    </div>
     }
 
     <div class="form-field">
@@ -26,17 +26,14 @@
     <div class="form-field">
       <label>Ruolo</label>
       <div class="role-picker">
-        <button type="button"
-                class="role-picker__option"
-                [class.role-picker__option--dev-selected]="signupForm.role().value() === 'dev'"
-                (click)="selectRole('dev')">
+        <button type="button" class="role-picker__option"
+          [class.role-picker__option--dev-selected]="signupForm.role().value() === 'dev'" (click)="selectRole('dev')">
           <span class="role-picker__label">Sviluppatore</span>
           <span class="role-picker__badge role-picker__badge--dev">Dev</span>
         </button>
-        <button type="button"
-                class="role-picker__option"
-                [class.role-picker__option--tech-selected]="signupForm.role().value() === 'tech'"
-                (click)="selectRole('tech')">
+        <button type="button" class="role-picker__option"
+          [class.role-picker__option--tech-selected]="signupForm.role().value() === 'tech'"
+          (click)="selectRole('tech')">
           <span class="role-picker__label">Help Desk</span>
           <span class="role-picker__badge role-picker__badge--tech">Tech</span>
         </button>
@@ -56,7 +53,7 @@
       <input id="password" type="password" [formField]="signupForm.password" autocomplete="new-password" />
     </div>
 
-    <button type="submit">Registrati</button>
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Registrazione...' : 'Registrati' }}</button>
   </form>
   <p class="auth-switch">Hai già un account? <a routerLink="/login">Accedi</a></p>
 </main>

@@ -1,4 +1,5 @@
-import { Component, signal, ElementRef, inject, HostListener } from '@angular/core';
+import { Component, signal, computed, ElementRef, inject, HostListener } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile-menu',
@@ -8,21 +9,27 @@ import { Component, signal, ElementRef, inject, HostListener } from '@angular/co
 })
 export class ProfileMenu {
   private readonly elRef = inject(ElementRef);
+  private readonly authService = inject(AuthService);
 
-  readonly firstName = 'Mario';
-  readonly lastName = 'Rossi';
-  readonly email = 'mario.rossi@everience.com';
-  readonly role: 'dev' | 'tech' = 'dev';
+  readonly firstName = computed(() => this.authService.currentUser()?.first_name ?? '');
+  readonly lastName = computed(() => this.authService.currentUser()?.last_name ?? '');
+  readonly email = computed(() => this.authService.currentUser()?.email ?? '');
+  readonly role = computed(() => this.authService.currentUser()?.role ?? 'dev');
 
-  readonly initials = this.firstName[0] + this.lastName[0];
+  readonly initials = computed(() => {
+    const fn = this.firstName();
+    const ln = this.lastName();
+    return (fn?.[0] ?? '') + (ln?.[0] ?? '');
+  });
+
   readonly isOpen = signal(false);
 
   toggle(): void {
     this.isOpen.update(v => !v);
   }
 
-  logout(): void {
-    // TODO: Add logout functionality when backend auth exists
+  async logout(): Promise<void> {
+    await this.authService.logOut();
   }
 
   @HostListener('document:click', ['$event'])
