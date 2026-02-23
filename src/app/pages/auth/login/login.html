@@ -22,14 +22,12 @@
     </div>
 
     <div class="form-field">
-      <div class="label-row">
-        <label for="password">Password</label>
-        <a class="forgot-password" (click)="onForgotPassword()">Password dimenticata?</a>
-      </div>
+      <label for="password">Password</label>
       <input id="password" type="password" [formField]="loginForm.password" autocomplete="current-password" />
     </div>
 
     <button type="submit" [disabled]="loading()">{{ loading() ? 'Accesso...' : 'Accedi' }}</button>
   </form>
+  <a class="forgot-password-link" routerLink="/forgot-password">Password dimenticata?</a>
   <p class="auth-switch">Non hai un account? <a routerLink="/signup">Registrati</a></p>
 </main>

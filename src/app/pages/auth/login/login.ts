@@ -75,10 +75,6 @@ export class Login {
     }
   }
 
-  onForgotPassword(): void {
-    // TODO: implement forgot-password flow
-  }
-
   dismissError(): void {
     this.loginError.set(null);
   }

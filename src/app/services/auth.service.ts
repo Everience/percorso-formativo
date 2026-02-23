@@ -7,6 +7,7 @@ import {
     Auth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
     signOut,
     onAuthStateChanged,
     User as FirebaseUser,
@@ -108,6 +109,10 @@ export class AuthService {
         this.currentUser.set(null);
         this.courseDetailService.clearStatuses();
         this.router.navigate(['/login']);
+    }
+
+    async resetPassword(email: string): Promise<void> {
+        await sendPasswordResetEmail(this.auth, email);
     }
 
     async getIdToken(): Promise<string | null> {
