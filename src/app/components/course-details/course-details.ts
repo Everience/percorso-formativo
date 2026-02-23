@@ -1,6 +1,6 @@
 import { Component, computed, effect, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { CourseDetailService, CourseStatus } from '../../services/course-detail.service';
+import { CourseDetailService, CourseStatus, statusToBackend } from '../../services/course-detail.service';
 import { CourseService } from '../../services/course.service';
 import { Course, Resource } from '../../models/course.model';
 import { GlassElem } from '../glass-elem/glass-elem';
@@ -91,9 +91,21 @@ export class CourseDetails {
 
   selectStatus(status: CourseStatus): void {
     const course = this.courseDetailService.selectedCourse();
+    const courseId = this.courseDetailService.selectedCourseId();
+
     if (course) {
       this.courseDetailService.setStatus(course, status);
     }
+
+    if (courseId != null) {
+      const backendStatus = statusToBackend(status);
+      this.courseService.updateStatus(courseId, backendStatus).subscribe({
+        error: (err) => {
+          console.error('Failed to update course status:', err);
+        },
+      });
+    }
+
     this.statusDropdownOpen.set(false);
   }
 
@@ -111,3 +123,4 @@ export class CourseDetails {
     }
   }
 }
+

@@ -2,6 +2,26 @@ import { Injectable, signal } from '@angular/core';
 
 export type CourseStatus = 'completed' | 'in-progress' | 'not-started';
 
+const STATUS_TO_BACKEND: Record<CourseStatus, string> = {
+  'completed': 'completed',
+  'in-progress': 'in_progress',
+  'not-started': 'not_started',
+};
+
+const STATUS_FROM_BACKEND: Record<string, CourseStatus> = {
+  'completed': 'completed',
+  'in_progress': 'in-progress',
+  'not_started': 'not-started',
+};
+
+export function statusFromBackend(backendStatus: string): CourseStatus {
+  return STATUS_FROM_BACKEND[backendStatus] ?? 'not-started';
+}
+
+export function statusToBackend(frontendStatus: CourseStatus): string {
+  return STATUS_TO_BACKEND[frontendStatus] ?? 'not_started';
+}
+
 @Injectable({ providedIn: 'root' })
 export class CourseDetailService {
   readonly selectedCourse = signal<string | null>(null);
@@ -27,5 +47,13 @@ export class CourseDetailService {
       ...statuses,
       [courseName]: status,
     }));
+  }
+
+  loadStatuses(statusMap: Record<string, CourseStatus>): void {
+    this.courseStatuses.set(statusMap);
+  }
+
+  clearStatuses(): void {
+    this.courseStatuses.set({});
   }
 }

@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { Router } from '@angular/router';
 import { GlassElem } from '../glass-elem/glass-elem';
 import { CourseService } from '../../services/course.service';
+import { CourseDetailService, statusFromBackend } from '../../services/course-detail.service';
 import { Course } from '../../models/course.model';
 
 export interface RoadmapRow {
@@ -26,6 +27,7 @@ export class Roadmap {
   readonly oppositeLabel = input.required<string>();
 
   private readonly courseService = inject(CourseService);
+  private readonly courseDetailService = inject(CourseDetailService);
   private readonly router = inject(Router);
 
   readonly courses = signal<Course[]>([]);
@@ -72,9 +74,20 @@ export class Roadmap {
       this.loading.set(true);
       this.error.set(null);
 
-      const sub = this.courseService.getCoursesByCategory(category).subscribe({
-        next: courses => {
-          this.courses.set(courses);
+      const sub = this.courseService.getDashboard().subscribe({
+        next: dashboardCourses => {
+          const filtered = dashboardCourses.filter(
+            c => c.category?.toLowerCase() === category.toLowerCase()
+          );
+          this.courses.set(filtered);
+
+          const statusMap: Record<string, string> = {};
+          for (const course of dashboardCourses) {
+            const formattedTitle = course.title.replace(/\\n|\n/g, '<br>');
+            statusMap[formattedTitle] = statusFromBackend(course.status);
+          }
+          this.courseDetailService.loadStatuses(statusMap as any);
+
           this.loading.set(false);
         },
         error: () => {
