@@ -1,4 +1,5 @@
 const UserModel = require('../models/userModel');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 exports.getUserById = async (req, res) => {
     try {
@@ -62,6 +63,7 @@ exports.addUserToDB = async (req, res) => {
         });
      
         const user = await UserModel.findById(newUserId);
+        sendWelcomeEmail(email, user.firstName || firstName);
         res.status(201).json(user);
 
     } catch (error) {

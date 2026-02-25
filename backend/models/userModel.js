@@ -15,7 +15,7 @@ class UserModel {
             .input('uid', sql.NVarChar, uid)
             .query('SELECT * FROM Users WHERE uid = @uid');
         return result.recordset[0];
-    }
+    } 
 
    static async addUserToDB(userData) {
         const { firstName, lastName, email, role, uid } = userData;
