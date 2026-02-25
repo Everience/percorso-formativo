@@ -39,17 +39,15 @@
             target="_blank" rel="noopener">
             SharePoint
           </a>
-          in una nuova scheda. Se non hai l'accesso, chiedi il codice a
-          <a href="https://teams.microsoft.com/l/chat/19:69405d77-144e-4e77-a596-b2ae2f8f071b_ae88167d-fef5-4314-8ac7-0bd9b2fe0b17@unq.gbl.spaces/conversations?context=%7B%22contextType%22%3A%22chat%22%7D"
-            target="_blank" rel="noopener" class="hr">
-            Alessandra
+          in una nuova scheda. Se non hai l'accesso, salta i prossimi passaggi e chiedi il codice a
+          <a [href]="getTeamsChatLink(hrContacts[0].email)" target="_blank" rel="noopener" class="hr">
+            {{ hrContacts[0].name }}
           </a>
           o a
-          <a href="https://teams.microsoft.com/l/chat/19:ae88167d-fef5-4314-8ac7-0bd9b2fe0b17_dfd0d764-7323-4252-8691-e890787d65eb@unq.gbl.spaces/conversations?context=%7B%22contextType%22%3A%22chat%22%7D"
-            target="_blank" rel="noopener" class="hr">
-            Francesca
+          <a [href]="getTeamsChatLink(hrContacts[1].email)" target="_blank" rel="noopener" class="hr">
+            {{ hrContacts[1].name }}
           </a>
-          .</span>
+        </span>
       </li>
       <li>
         <span>Clicca su <strong>"Codici di accesso"</strong></span>
