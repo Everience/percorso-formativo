@@ -26,6 +26,7 @@
     pointer-events: none;
     white-space: nowrap;
   }
+
   &__material {
     position: absolute;
     inset: 0;
@@ -42,10 +43,10 @@
     z-index: 3;
     overflow: hidden;
     border-radius: var(--corner-radius);
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
-  &__material > div {
+  &__material>div {
     position: absolute;
     inset: 0;
     box-sizing: border-box;
@@ -88,10 +89,12 @@
     .status-select__material::after {
       background-color: rgba(255, 255, 255, 0.09);
     }
+
     .status-select__material::before {
       background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.6) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.05) 100%);
     }
   }
+
   &__dropdown {
     position: absolute;
     top: calc(100% + 0.5rem);
