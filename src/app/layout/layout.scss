@@ -9,15 +9,16 @@ header {
     z-index: 50;
   }
 
-  h3, h1 {
+  h3,
+  h1 {
     text-align: center;
   }
-    
+
   h3 {
     font-size: var(--font-size-welcome);
     font-weight: var(--font-weight-bold);
   }
-    
+
   h1 {
     font-size: var(--font-size-title);
     font-weight: var(--font-weight-bold);
@@ -26,6 +27,34 @@ header {
 
 main {
   padding: 5rem 0 3.75rem 0;
+
+  .top-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: -2.5rem 0 2.5rem 0;
+
+    .separator {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 1rem;
+    }
+
+    .manual-link {
+      font-size: 1rem;
+      font-weight: var(--font-weight-normal);
+      text-align: center;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #FFFFFF;
+      }
+    }
+  }
 }
 
 .overlay {
@@ -61,6 +90,11 @@ main {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

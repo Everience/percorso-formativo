@@ -31,6 +31,13 @@ export const routes: Routes = [
         .then(m => m.NotFound)
   },
   {
+    path: 'user-manual',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/user-manual/user-manual')
+        .then(m => m.UserManual)
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
