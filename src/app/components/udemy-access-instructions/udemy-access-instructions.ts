@@ -1,5 +1,6 @@
 import { Component, signal, inject, HostListener } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-udemy-access-instructions',
@@ -13,6 +14,11 @@ export class UdemyAccessInstructions {
   readonly copied = signal(false);
 
   readonly sharedEmail = 'register.is@everience.com';
+  readonly hrContacts = environment.hrContacts;
+
+  getTeamsChatLink(email: string): string {
+    return `https://teams.microsoft.com/l/chat/0/0?users=${email}`;
+  }
 
   open(): void {
     this.isOpen.set(true);

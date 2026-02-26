@@ -41,14 +41,14 @@
 
   &--completed &__material::after {
     background:
-      linear-gradient(rgba(88, 103, 203, 0.32), rgba(88, 103, 203, 0.32)),
+      linear-gradient(rgba(88, 103, 203, 0.6), rgba(88, 103, 203, 0.6)),
       linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
   }
 
   &--in-progress &__material::after {
     background:
-      linear-gradient(rgba(228, 13, 124, 0.2), rgba(228, 13, 124, 0.2)),
-      linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.04));
+      linear-gradient(rgba(228, 13, 124, 0.3), rgba(228, 13, 124, 0.3)),
+      linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
   }
 
   &__status-icon {
@@ -98,6 +98,7 @@
     overflow: visible;
     pointer-events: none;
   }
+
   &__material::after {
     content: '';
     display: block;
@@ -106,10 +107,10 @@
     z-index: 3;
     overflow: hidden;
     border-radius: var(--corner-radius);
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
-  &__material > div {
+  &__material>div {
     position: absolute;
     inset: 0;
     box-sizing: border-box;
@@ -129,9 +130,9 @@
     border: 0 solid transparent;
     background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.8) 0%, hsla(0, 0%, 0%, 0.4) 50%, hsla(0, 0%, 100%, 0.25) 100%);
     backdrop-filter: invert(0.15) opacity(1);
-    mask: 
-        linear-gradient(white 0 0) padding-box,
-        linear-gradient(white 0 0) content-box;
+    mask:
+      linear-gradient(white 0 0) padding-box,
+      linear-gradient(white 0 0) content-box;
     mask-composite: exclude, exclude;
   }
 
@@ -142,9 +143,9 @@
     padding: 1px;
     border: 0 solid transparent;
     backdrop-filter: brightness(1.2) contrast(1.6) saturate(1.2) opacity(1);
-    mask: 
-        linear-gradient(white 0 0) padding-box,
-        linear-gradient(white 0 0) content-box;
+    mask:
+      linear-gradient(white 0 0) padding-box,
+      linear-gradient(white 0 0) content-box;
     mask-composite: exclude, exclude;
   }
 
@@ -152,6 +153,7 @@
     .glass-elem__material::after {
       background-color: rgba(255, 255, 255, 0.09);
     }
+
     .glass-elem__material::before {
       background: linear-gradient(205deg, hsla(0, 0%, 100%, 0.6) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.05) 100%);
     }

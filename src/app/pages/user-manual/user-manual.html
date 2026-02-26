@@ -1,0 +1,462 @@
+<header class="manual-header">
+  <a routerLink="/" class="back-link">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Torna al percorso
+  </a>
+  <h1>Manuale Utente</h1>
+  <p class="subtitle">La guida completa alla piattaforma <strong>Percorso Formativo</strong></p>
+</header>
+
+<div class="manual-layout">
+  <nav class="toc" [class.toc--visible]="tocOpen()" aria-label="Indice del manuale" role="navigation">
+    <button class="toc__toggle" (click)="toggleToc()" aria-label="Mostra indice">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      Indice
+    </button>
+
+    <div class="toc__body">
+      <h3 class="toc__title">Indice</h3>
+
+      <div class="toc__container">
+        <div class="toc__progress-track" aria-hidden="true">
+          <div class="toc__progress-fill" [style.height.%]="scrollProgress()"></div>
+        </div>
+
+        <ul class="toc__list">
+          <li><a (click)="scrollTo('introduzione')" [class.active]="activeSection() === 'introduzione'"
+              [attr.aria-current]="activeSection() === 'introduzione' ? 'step' : null">Introduzione</a></li>
+          <li><a (click)="scrollTo('requisiti')" [class.active]="activeSection() === 'requisiti'"
+              [attr.aria-current]="activeSection() === 'requisiti' ? 'step' : null">Requisiti di Sistema</a></li>
+          <li><a (click)="scrollTo('accesso')" [class.active]="activeSection() === 'accesso'"
+              [attr.aria-current]="activeSection() === 'accesso' ? 'step' : null">Accesso e Registrazione</a></li>
+          <li><a (click)="scrollTo('navigazione')" [class.active]="activeSection() === 'navigazione'"
+              [attr.aria-current]="activeSection() === 'navigazione' ? 'step' : null">Navigazione della Piattaforma</a>
+          </li>
+          <li><a (click)="scrollTo('udemy')" [class.active]="activeSection() === 'udemy'"
+              [attr.aria-current]="activeSection() === 'udemy' ? 'step' : null">Accesso a Udemy</a></li>
+          <li><a (click)="scrollTo('corsi')" [class.active]="activeSection() === 'corsi'"
+              [attr.aria-current]="activeSection() === 'corsi' ? 'step' : null">Gestione dei Corsi</a></li>
+          <li><a (click)="scrollTo('profilo')" [class.active]="activeSection() === 'profilo'"
+              [attr.aria-current]="activeSection() === 'profilo' ? 'step' : null">Profilo Utente</a></li>
+          <li><a (click)="scrollTo('problemi')" [class.active]="activeSection() === 'problemi'"
+              [attr.aria-current]="activeSection() === 'problemi' ? 'step' : null">Risoluzione Problemi</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="manual-content">
+
+    <section class="card" id="introduzione">
+      <div class="card__number">1</div>
+      <h2>Introduzione</h2>
+      <p>Benvenuti nel <strong>Percorso Formativo</strong>, la piattaforma web dedicata alla gestione e al
+        monitoraggio del tuo apprendimento tecnico e professionale all'interno di <strong>Everience</strong>.
+      </p>
+      <p>La piattaforma offre due percorsi principali di apprendimento:</p>
+
+      <div class="path-cards">
+        <div class="path-card path-card--dev">
+          <span class="path-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <div>
+            <strong>Dev</strong>
+            <span>Percorso per programmatori e sviluppatori software</span>
+          </div>
+        </div>
+        <div class="path-card path-card--tech">
+          <span class="path-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </span>
+          <div>
+            <strong>Tech</strong>
+            <span>Percorso per tecnici e specialisti infrastrutturali</span>
+          </div>
+        </div>
+      </div>
+
+      <p>Ogni percorso è visualizzato come una <em>roadmap</em> interattiva che mostra i corsi in ordine
+        logico e sequenziale, permettendoti di tracciare i tuoi progressi in tempo reale.</p>
+    </section>
+
+    <section class="card" id="requisiti">
+      <div class="card__number">2</div>
+      <h2>Requisiti di Sistema</h2>
+      <p>Per utilizzare al meglio la piattaforma, assicurati di avere:</p>
+      <ul class="check-list">
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Un <strong>browser web moderno</strong> (Chrome, Firefox, Edge, Safari)</span>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Una <strong>connessione internet</strong> stabile</span>
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span><strong>Javascript abilitato</strong> nel browser</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card" id="accesso">
+      <div class="card__number">3</div>
+      <h2>Accesso e Registrazione</h2>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+          Registrazione
+        </h3>
+        <ol class="step-list">
+          <li><span>Dalla pagina di <a routerLink="/login">login</a>, clicca su <strong>"Non hai un account?
+                Registrati"</strong>.</span></li>
+          <li><span>Compila il modulo inserendo <strong>Nome</strong>, <strong>Cognome</strong>,
+              <strong>Email</strong> e <strong>Password</strong>.</span>
+          </li>
+          <li><span>Seleziona il tuo <strong>Ruolo</strong> principale: <span class="highlight dev-highlight">Dev</span>
+              o
+              <span class="highlight tech-highlight">Tech</span>.</span>
+          </li>
+          <li><span>Clicca su <strong>"Registrati"</strong> per completare la creazione dell'account.</span></li>
+          <li><span>Verrai reindirizzato automaticamente alla pagina di login.</span></li>
+        </ol>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+          Accesso (Login)
+        </h3>
+        <ol class="step-list">
+          <li><span>Inserisci il tuo <strong>username</strong> (la parte prima di &#64;everience.com) nel campo
+              email.</span></li>
+          <li><span>Inserisci la tua <strong>Password</strong>.</span></li>
+          <li><span>Clicca su <strong>"Accedi"</strong>.</span></li>
+          <li><span>Verrai automaticamente reindirizzato alla roadmap corrispondente al tuo ruolo.</span></li>
+        </ol>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Recupero Password
+        </h3>
+        <p>Se hai dimenticato la password:</p>
+        <ol class="step-list">
+          <li><span>Dalla pagina di login, clicca su <strong>"Password dimenticata?"</strong>.</span></li>
+          <li><span>Inserisci l'<strong>indirizzo email</strong> associato al tuo account.</span></li>
+          <li><span>Clicca su <strong>"Invia email di reset"</strong>.</span></li>
+          <li><span>Controlla la tua casella di posta (anche la cartella <strong>spam</strong>) e segui le
+              istruzioni per impostare una nuova password.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card" id="navigazione">
+      <div class="card__number">4</div>
+      <h2>Navigazione della Piattaforma</h2>
+      <p>Dopo il login, arriverai alla tua <strong>roadmap personale</strong>. Ecco come è organizzata
+        l'interfaccia:</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+          </svg>
+          Header
+        </h3>
+        <p>Nella parte superiore troverai il messaggio di benvenuto e, in alto a destra, il pulsante del tuo
+          <strong>profilo utente</strong> con le tue iniziali.
+        </p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+          Roadmap
+        </h3>
+        <p>La mappa centrale presenta una serie di <strong>card interattive</strong>, ognuna corrispondente a un
+          modulo formativo o corso. Le card sono disposte in ordine sequenziale e ciascuna mostra il titolo
+          della materia e un'icona che ne indica lo stato.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+          Cambio Percorsi Dev ↔ Tech
+        </h3>
+        <p>In basso alla pagina è presente un pulsante per passare da un percorso all'altro (es.
+          <strong>"Visualizza i corsi tech"</strong> o <strong>"Visualizza i corsi dev"</strong>). Cliccando,
+          la roadmap si aggiornerà con i corsi dell'altro percorso.
+        </p>
+      </div>
+
+      <div class="callout callout--info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <p>I link <strong>"Come accedere a Udemy"</strong> e <strong>"Manuale utente"</strong> si trovano sotto
+          l'intestazione, al centro della pagina.</p>
+      </div>
+    </section>
+
+    <section class="card" id="udemy">
+      <div class="card__number">5</div>
+      <h2>Accesso a Udemy</h2>
+      <p>Molti dei corsi presenti sulla piattaforma sono ospitati su <strong>Udemy</strong>. Per accedere con
+        l'account aziendale, segui questa procedura:</p>
+
+      <ol class="step-list step-list--numbered">
+        <li><span>Apri la pagina di accesso di <a
+              href="https://www.udemy.com/join/passwordless-auth/?locale=it_IT&next=https%3A%2F%2Fwww.udemy.com%2F%3Fpersist_locale%3D%26locale%3Dit_IT&response_type=html&action=login&mode"
+              target="_blank" rel="noopener">Udemy</a> in una nuova scheda.</span></li>
+        <li><span>Inserisci l'email condivisa: <strong
+              class="email-highlight">register.is&#64;everience.com</strong></span>
+        </li>
+        <li><span>Per ottenere il codice OTP, apri <a
+              href="https://helpline.sharepoint.com/sites/sp-prod-EVERIENCEITALIA" target="_blank"
+              rel="noopener">SharePoint</a> in una nuova scheda.</span></li>
+        <li><span>Clicca su <strong>"Codici di accesso"</strong>.</span></li>
+        <li><span>Seleziona <strong>"Udemy"</strong> dal menu e inserisci la tua <strong>email
+              aziendale</strong>.</span>
+        </li>
+        <li><span>Riceverai un'email da <strong>serviceaccount-italy</strong> con il codice OTP — inseriscilo su Udemy
+            per completare l'accesso.</span></li>
+      </ol>
+
+      <div class="callout callout--warning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+          </path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <p>Se non hai accesso a SharePoint, contatta <strong>Alessandra</strong>
+          (alessandra.cirino&#64;everience.com) o <strong>Francesca</strong>
+          (francesca.fortin&#64;everience.com) per ricevere il codice OTP.</p>
+      </div>
+    </section>
+
+    <section class="card" id="corsi">
+      <div class="card__number">6</div>
+      <h2>Gestione dei Corsi</h2>
+      <p>Cliccando su una qualsiasi card della roadmap, si aprirà un <strong>pannello laterale</strong> sulla
+        destra con tutti i dettagli.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Dettagli del Corso
+        </h3>
+        <p>Nel pannello troverai il <strong>titolo</strong> del corso e la sua <strong>descrizione
+            completa</strong> con gli argomenti trattati.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          Risorse
+        </h3>
+        <p>Se il corso prevede materiali aggiuntivi, troverai la sezione <strong>"Risorse"</strong> con link
+          diretti a lezioni video su piattaforme come Udemy o YouTube.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"></polyline>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          Stato di Avanzamento
+        </h3>
+        <p>Per tracciare i tuoi progressi, cambia lo stato usando il <strong>menu a tendina</strong> in alto a
+          destra del pannello:</p>
+        <div class="status-badges">
+          <span class="status-badge status-badge--todo">Da iniziare</span>
+          <span class="status-badge status-badge--progress">In corso</span>
+          <span class="status-badge status-badge--done">Completato</span>
+        </div>
+        <p>La modifica viene salvata automaticamente e il colore/icona della card nella roadmap si aggiornerà di
+          conseguenza.</p>
+      </div>
+    </section>
+
+    <section class="card" id="profilo">
+      <div class="card__number">7</div>
+      <h2>Profilo Utente</h2>
+      <p>In alto a destra della pagina troverai il pulsante del tuo profilo, un <strong>cerchio con le tue
+          iniziali</strong>.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Menu Profilo
+        </h3>
+        <p>Cliccando sul pulsante si aprirà un menu a tendina con:</p>
+        <ul>
+          <li><strong>Nome e Cognome</strong> — il tuo nome completo.</li>
+          <li><strong>Ruolo</strong> — il badge <span class="highlight dev-highlight">Dev</span> o <span
+              class="highlight tech-highlight">Tech</span> assegnato.</li>
+          <li><strong>Email</strong> — il tuo indirizzo email aziendale.</li>
+          <li><strong>Logout</strong> — per disconnetterti dalla piattaforma e tornare alla pagina di login.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="problemi">
+      <div class="card__number">8</div>
+      <h2>Risoluzione Problemi</h2>
+
+      <dl class="faq-list">
+        <div class="faq-item">
+          <dt>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Non riesco ad accedere
+          </dt>
+          <dd>Verifica che l'email e la password siano corrette. Controlla che il tasto <kbd>Caps Lock</kbd>
+            non sia attivo. Se il problema persiste, utilizza la funzione <strong>"Password
+              dimenticata?"</strong>.</dd>
+        </div>
+
+        <div class="faq-item">
+          <dt>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            La dashboard è vuota o non carica i corsi
+          </dt>
+          <dd>Prova a ricaricare la pagina premendo <kbd>F5</kbd> o <kbd>Ctrl</kbd> + <kbd>R</kbd>. Verifica
+            la tua connessione internet. Se il problema persiste, effettua il logout e accedi nuovamente.
+          </dd>
+        </div>
+
+        <div class="faq-item">
+          <dt>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Non vedo le risorse del corso
+          </dt>
+          <dd>Non tutti i moduli hanno risorse esterne associate. Se ritieni sia un errore, contatta
+            l'amministratore del sistema.</dd>
+        </div>
+
+        <div class="faq-item">
+          <dt>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Non riesco ad ottenere il codice OTP per Udemy
+          </dt>
+          <dd>Assicurati di avere accesso a SharePoint. Se non hai l'accesso, contatta direttamente
+            <strong>Alessandra</strong> o <strong>Francesca</strong> via email o Teams per ricevere il
+            codice.
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <p class="last-update">Manuale aggiornato al 25 Febbraio 2026</p>
+  </main>
+</div>
+
+@if (showBackToTop()) {
+<button class="back-to-top" (click)="scrollToTop()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+</button>
+}

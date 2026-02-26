@@ -5,12 +5,16 @@
 </header>
 
 <main>
-  <app-udemy-access-instructions></app-udemy-access-instructions>
+  <div class="top-links">
+    <app-udemy-access-instructions></app-udemy-access-instructions>
+    <span class="separator">|</span>
+    <a routerLink="/user-manual" class="manual-link">Manuale utente</a>
+  </div>
   <router-outlet></router-outlet>
 </main>
 
 @if (courseDetailService.selectedCourse()) {
-  <div class="overlay" (click)="courseDetailService.close()"></div>
+<div class="overlay" (click)="courseDetailService.close()"></div>
 }
 
 <aside class="sidebar" [class.sidebar--open]="courseDetailService.selectedCourse()">
