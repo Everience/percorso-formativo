@@ -46,4 +46,3 @@ Thumbs.db
 node_modules/
 .env
 firebase-key.json
-firebase.config.ts
