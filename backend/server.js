@@ -6,15 +6,18 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors()); 
+// Middlewareconst
+corsOptions = {
+  origin: 'https://everience.percorso-formativo.netlify.app',
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const admin = require('firebase-admin');
 
-const serviceAccount = require('./firebase-key.json');
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
