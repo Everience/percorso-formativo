@@ -1,4 +1,5 @@
 const UserModel = require('../models/userModel');
+const { sendWelcomeEmail } = require('../services/emailService');
 
 // Maps frontend role names to DB values and vice-versa
 const ROLE_TO_DB = { dev: 'dev-user', tech: 'tech-user' };
@@ -77,6 +78,7 @@ exports.addUserToDB = async (req, res) => {
         });
 
         const user = await UserModel.findById(newUserId);
+        sendWelcomeEmail(email, user.firstName || firstName);
         res.status(201).json(mapRoleFromDB(user));
 
     } catch (error) {

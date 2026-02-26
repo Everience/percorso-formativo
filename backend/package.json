@@ -20,6 +20,7 @@
     "firebase-admin": "^13.6.1",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
-    "mssql": "^12.2.0"
+    "mssql": "^12.2.0",
+    "nodemailer": "^8.0.1"
   }
 }
