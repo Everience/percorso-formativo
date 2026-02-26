@@ -14,7 +14,7 @@ import {
 } from 'firebase/auth';
 import { firstValueFrom } from 'rxjs';
 import { firebaseConfig } from '../firebase.config';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 import { CourseDetailService } from './course-detail.service';
 
 export interface AppUser {
