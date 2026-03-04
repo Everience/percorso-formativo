@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course, Resource } from '../models/course.model';
 import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 
 export interface DashboardCourse extends Course {
   status: string; // 'not_started' | 'in_progress' | 'completed' from backend
