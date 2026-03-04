@@ -1,6 +1,6 @@
 import { Component, signal, inject, HostListener } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-udemy-access-instructions',
