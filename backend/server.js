@@ -22,6 +22,8 @@ app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const admin = require('firebase-admin');
+const adminUserRoutes = require('./routes/adminUserRoutes');
+const adminCourseRoutes = require('./routes/adminCourseRoutes');
 
 /* PRODUCTION */
 /*
@@ -36,6 +38,9 @@ admin.initializeApp({
 
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
+
+app.use('/api/admin/users', adminUserRoutes);
+app.use('/api/admin/courses', adminCourseRoutes);
 
 // Test route
 app.get('/', (req, res) => {
