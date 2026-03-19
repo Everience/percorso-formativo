@@ -1,0 +1,151 @@
+<div class="page-header">
+  <div>
+    <h1>Corsi</h1>
+    <p>Gestione catalogo e anteprima roadmap</p>
+  </div>
+  <button class="primary-btn" [class.primary-btn--ghost]="showCreateForm" (click)="toggleCreateForm()">
+    @if (showCreateForm) {
+      Annulla
+    } @else {
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Nuovo corso
+    }
+  </button>
+</div>
+
+@if (showCreateForm) {
+  <section class="create-card">
+    <h2>Nuovo corso</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Titolo</label>
+        <input type="text" [(ngModel)]="newCourse.title" placeholder="Titolo del corso" />
+      </div>
+      <div class="form-field">
+        <label>Categoria</label>
+        <div class="cat-toggle">
+          <button [class.cat-toggle__btn--active]="newCourse.category === 'DEV'" (click)="newCourse.category = 'DEV'">
+            <span class="cat-toggle__dot cat-toggle__dot--dev"></span>Dev
+          </button>
+          <button [class.cat-toggle__btn--active]="newCourse.category === 'TECH'" (click)="newCourse.category = 'TECH'">
+            <span class="cat-toggle__dot cat-toggle__dot--tech"></span>Tech
+          </button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Riga posizione</label>
+        <input type="number" [(ngModel)]="newCourse.position_row" min="1" />
+        <span class="field-meta">Riga {{ newCourse.position_row || 1 }}: {{ newCourseRowCount() }}/4 corsi</span>
+      </div>
+      <div class="form-field">
+        <label>Ordine nella riga</label>
+        <input type="number" [(ngModel)]="newCourse.display_order" min="1" max="4" />
+        <span class="field-meta">Valori consentiti: 1-4</span>
+      </div>
+      <div class="form-field form-field--full">
+        <label>Descrizione <span class="hint">(vuoto = certificazione)</span></label>
+        <textarea [(ngModel)]="newCourse.description" rows="3" placeholder="Lascia vuoto per creare una certificazione"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="primary-btn" (click)="createCourse()" [disabled]="!canCreateCourse()">Crea corso</button>
+    </div>
+  </section>
+}
+
+<section class="roadmap-card">
+  <div class="roadmap-toolbar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" placeholder="Cerca corso..." [(ngModel)]="searchQuery" (input)="onSearchInput()" />
+    </div>
+
+    <div class="filter-group">
+      <button class="chip chip--dev" [class.chip--active]="selectedTab() === 'DEV'" (click)="switchTab('DEV')">
+        <span class="chip__dot"></span>DEV
+      </button>
+      <button class="chip chip--tech" [class.chip--active]="selectedTab() === 'TECH'" (click)="switchTab('TECH')">
+        <span class="chip__dot"></span>TECH
+      </button>
+    </div>
+
+    <span class="roadmap-toolbar__meta">
+      <strong>{{ activeCourseCount() }}</strong> corsi · <strong>{{ activeRows().length }}</strong> righe
+    </span>
+
+    @if (savingOrder()) {
+      <span class="saving-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
+        Salvataggio...
+      </span>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span>Caricamento corsi...</span>
+    </div>
+  } @else {
+    <div class="roadmap-viewport" cdkDropListGroup>
+      @for (rowGroup of displayRows(); track rowGroup.row; let first = $first) {
+        @if (isNewRow(rowGroup)) {
+          <div class="row-connector" [class.row-connector--visible]="isDragging()" aria-hidden="true">
+            <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="var(--admin-border)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+          </div>
+          <div class="roadmap-row roadmap-row--new" [class.roadmap-row--visible]="isDragging()">
+            <span class="roadmap-row__label roadmap-row__label--new">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Nuova riga
+            </span>
+            <div class="roadmap-row__items roadmap-row__items--empty"
+              cdkDropList
+              [cdkDropListData]="rowGroup.courses"
+              (cdkDropListDropped)="onDrop(rowGroup.row, $event)"
+              cdkDropListOrientation="horizontal">
+            </div>
+          </div>
+        } @else {
+
+          @if (!first) {
+            <div class="row-connector" aria-hidden="true">
+              <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="var(--admin-border)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+            </div>
+          }
+
+          <div class="roadmap-row">
+            <span class="roadmap-row__label">Riga {{ rowGroup.row }}</span>
+            <div class="roadmap-row__items"
+              cdkDropList
+              [cdkDropListData]="rowGroup.courses"
+              (cdkDropListDropped)="onDrop(rowGroup.row, $event)"
+              cdkDropListOrientation="horizontal">
+
+              @for (course of rowGroup.courses; track course.id) {
+                <div class="roadmap-item" cdkDrag [cdkDragData]="course"
+                  (cdkDragStarted)="onDragStarted()"
+                  (cdkDragEnded)="onDragEnded()"
+                  [class.roadmap-item--cert]="isCertification(course)">
+
+                  <div class="roadmap-item__handle" cdkDragHandle>
+                    <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="2.5" cy="2" r="1.2"/><circle cx="7.5" cy="2" r="1.2"/><circle cx="2.5" cy="7" r="1.2"/><circle cx="7.5" cy="7" r="1.2"/><circle cx="2.5" cy="12" r="1.2"/><circle cx="7.5" cy="12" r="1.2"/></svg>
+                  </div>
+                  <a class="roadmap-item__link" [routerLink]="['/admin/courses', course.id]"
+                    [innerHTML]="formatTitle(course.title)"></a>
+                  <span class="roadmap-item__pos">R{{ course.position_row }}.{{ course.display_order }}</span>
+                  <button class="roadmap-item__delete" (click)="deleteCourse($event, course)" title="Elimina corso">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      } @empty {
+        <div class="empty-state">
+          <p>Nessun corso {{ selectedTab() }}</p>
+        </div>
+      }
+    </div>
+  }
+</section>
