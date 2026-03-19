@@ -58,7 +58,11 @@ export class Login {
 
     try {
       const user = await this.authService.signIn(email, password);
-      this.router.navigate([`/${user.role}`]);
+      if (user.role === 'admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate([`/${user.role}`]);
+      }
     } catch (err: any) {
       const code = err?.code || '';
       if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {

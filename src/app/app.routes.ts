@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
+import { userGuard } from './guards/user.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -32,14 +33,21 @@ export const routes: Routes = [
   },
   {
     path: 'user-manual',
-    canActivate: [authGuard],
+    canActivate: [userGuard],
     loadComponent: () =>
       import('./pages/user-manual/user-manual')
         .then(m => m.UserManual)
   },
   {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadChildren: () =>
+      import('./admin/admin.routes')
+        .then(m => m.adminRoutes)
+  },
+  {
     path: '',
-    canActivate: [authGuard],
+    canActivate: [userGuard],
     loadComponent: () =>
       import('./layout/layout')
         .then(m => m.Layout),
