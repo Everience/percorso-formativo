@@ -1,0 +1,49 @@
+.kpi {
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.875rem;
+    background: var(--admin-bg-card);
+    border: 1px solid var(--admin-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    &__label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--admin-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    &__sublabel {
+        font-size: 0.78rem;
+        color: var(--admin-text-secondary);
+    }
+
+    &--accent .kpi__value {
+        color: #E8467C;
+    }
+
+    &--blue .kpi__value {
+        color: #3B82F6;
+    }
+
+    &--green .kpi__value {
+        color: #10B981;
+    }
+
+    &--amber .kpi__value {
+        color: #F59E0B;
+    }
+}

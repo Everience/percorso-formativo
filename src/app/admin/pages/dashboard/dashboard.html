@@ -1,0 +1,171 @@
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Panoramica della piattaforma</p>
+</div>
+
+@if (loading()) {
+<div class="loading-state">
+  <div class="spinner"></div>
+  <span>Caricamento analytics...</span>
+</div>
+} @else if (error()) {
+<div class="error-state">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+  <span>{{ error() }}</span>
+  <span class="error-hint">Verifica che il backend sia attivo e la connessione al database funzionante.</span>
+</div>
+} @else if (data(); as d) {
+
+<!-- ─── KPI Cards ─── -->
+
+<div class="kpi-row">
+  <a class="kpi" routerLink="/admin/users">
+    <div class="kpi__icon kpi__icon--blue">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    </div>
+    <span class="kpi__label">Utenti totali</span>
+    <span class="kpi__value kpi__value--blue">{{ d.users.total }}</span>
+    <div class="kpi__pills">
+      <span class="pill pill--dev">{{ d.users.byRole.dev }} DEV</span>
+      <span class="pill pill--tech">{{ d.users.byRole.tech }} TECH</span>
+    </div>
+  </a>
+
+  <a class="kpi" routerLink="/admin/courses">
+    <div class="kpi__icon kpi__icon--accent">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+    </div>
+    <span class="kpi__label">Corsi totali</span>
+    <span class="kpi__value kpi__value--accent">{{ d.courses.total }}</span>
+    <div class="kpi__pills">
+      <span class="pill pill--dev">{{ d.courses.byCategory.DEV }} DEV</span>
+      <span class="pill pill--tech">{{ d.courses.byCategory.TECH }} TECH</span>
+    </div>
+  </a>
+
+  <div class="kpi kpi--ring">
+    <div class="kpi__body">
+      <div class="kpi__icon kpi__icon--green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <span class="kpi__label">Completamento medio</span>
+      <span class="kpi__value kpi__value--green">{{ d.completion.overallRate }}%</span>
+      <span class="kpi__sub">su tutti i corsi e utenti</span>
+    </div>
+    <div class="kpi__ring-wrap">
+      <svg viewBox="0 0 36 36" class="ring-svg">
+        <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--admin-border)" stroke-width="3" />
+        <circle class="ring-progress" cx="18" cy="18" r="15.915" fill="none" stroke="#10B981" stroke-width="3"
+          stroke-dasharray="100" [attr.stroke-dashoffset]="100 - d.completion.overallRate"
+          stroke-linecap="round" transform="rotate(-90 18 18)" />
+      </svg>
+      <span class="ring-label">{{ d.completion.overallRate }}%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Course Rankings ─── -->
+
+<div class="ranking-grid">
+  <section class="card card--top">
+    <div class="card__head">
+      <h2>Più completati</h2>
+      <span class="head-badge head-badge--green">Top 5</span>
+    </div>
+    <div class="ranking-list">
+      @for (course of d.completion.topCourses; track course.id; let i = $index) {
+      <a class="rank-item" [routerLink]="['/admin/courses', course.id]">
+        <span class="rank-num rank-num--green">{{ i + 1 }}</span>
+        <div class="rank-item__info">
+          <span class="rank-item__title">{{ cleanTitle(course.title) }}</span>
+          <div class="rank-item__meta">
+            <span class="badge" [class]="'badge--' + course.category.toLowerCase()">{{ course.category }}</span>
+            <span>{{ course.completedCount }}/{{ course.eligibleUsers }}</span>
+          </div>
+        </div>
+        <div class="rank-item__bar">
+          <div class="rank-item__bar-fill rank-item__bar-fill--green" [style.width.%]="course.completionRate"></div>
+        </div>
+        <span class="rank-item__pct rank-item__pct--green">{{ course.completionRate }}%</span>
+      </a>
+      } @empty {
+      <p class="empty-text">Nessun dato disponibile</p>
+      }
+    </div>
+  </section>
+
+  <section class="card card--attention">
+    <div class="card__head">
+      <h2>Da migliorare</h2>
+      <span class="head-badge head-badge--amber">Bottom 5</span>
+    </div>
+    <div class="ranking-list">
+      @for (course of d.completion.bottomCourses; track course.id; let i = $index) {
+      <a class="rank-item" [routerLink]="['/admin/courses', course.id]">
+        <span class="rank-num rank-num--amber">{{ i + 1 }}</span>
+        <div class="rank-item__info">
+          <span class="rank-item__title">{{ cleanTitle(course.title) }}</span>
+          <div class="rank-item__meta">
+            <span class="badge" [class]="'badge--' + course.category.toLowerCase()">{{ course.category }}</span>
+            <span>{{ course.completedCount }}/{{ course.eligibleUsers }}</span>
+          </div>
+        </div>
+        <div class="rank-item__bar">
+          <div class="rank-item__bar-fill rank-item__bar-fill--amber" [style.width.%]="course.completionRate"></div>
+        </div>
+        <span class="rank-item__pct rank-item__pct--amber">{{ course.completionRate }}%</span>
+      </a>
+      } @empty {
+      <p class="empty-text">Nessun dato disponibile</p>
+      }
+    </div>
+  </section>
+</div>
+
+<!-- ─── Full Course Table ─── -->
+
+<section class="table-section">
+  <div class="table-section__head">
+    <h2>Panoramica corsi</h2>
+    <div class="legend">
+      <span class="legend__item"><span class="legend__dot legend__dot--completed"></span>Completato</span>
+      <span class="legend__item"><span class="legend__dot legend__dot--progress"></span>In corso</span>
+      <span class="legend__item"><span class="legend__dot legend__dot--not-started"></span>Da iniziare</span>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <span class="th-title">Corso</span>
+      <span class="th-cat">Categoria</span>
+      <span class="th-bar">Distribuzione</span>
+      <span class="th-pct">Completati</span>
+    </div>
+    @for (course of courseRows(d.courseStats); track course.id) {
+    <a class="table-row" [routerLink]="['/admin/courses', course.id]">
+      <span class="td-title">{{ cleanTitle(course.title) }}</span>
+      <span class="td-cat">
+        <span class="badge" [class]="'badge--' + course.category.toLowerCase()">{{ course.category }}</span>
+      </span>
+      <span class="td-bar">
+        <div class="status-bar"
+          [title]="course.completedCount + ' completati · ' + course.inProgressCount + ' in corso · ' + course.notStartedCount + ' da iniziare'">
+          <div class="status-bar__seg status-bar__seg--completed" [style.width.%]="barPct(course.completedCount, course.eligibleUsers)"></div>
+          <div class="status-bar__seg status-bar__seg--progress" [style.width.%]="barPct(course.inProgressCount, course.eligibleUsers)"></div>
+        </div>
+      </span>
+      <span class="td-pct" [class]="rateClass(course.completionRate)">{{ course.completionRate }}%</span>
+    </a>
+    }
+  </div>
+</section>
+
+}
