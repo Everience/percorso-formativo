@@ -1,0 +1,121 @@
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+    animation: overlayIn 0.15s ease;
+}
+
+.confirm-dialog {
+    width: 24rem;
+    max-width: calc(100vw - 2rem);
+    padding: 1.75rem;
+    border-radius: 0.875rem;
+    background: var(--admin-bg-card);
+    border: 1px solid var(--admin-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08);
+    animation: dialogIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+
+    [data-admin-theme="dark"] & {
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        margin-bottom: 0.85rem;
+        color: var(--admin-accent);
+        background: var(--admin-accent-soft);
+    }
+
+    &--destructive &__icon {
+        color: #EF4444;
+        background: rgba(239, 68, 68, 0.1);
+
+        [data-admin-theme="dark"] & {
+            color: #F87171;
+            background: rgba(248, 113, 113, 0.12);
+        }
+    }
+
+    &__title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--admin-text);
+        margin-bottom: 0.35rem;
+    }
+
+    &__message {
+        font-size: 0.86rem;
+        color: var(--admin-text-secondary);
+        line-height: 1.55;
+        margin-bottom: 1.5rem;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+
+    &__btn {
+        padding: 0.45rem 1.25rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 0.84rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+
+        &--cancel {
+            background: var(--admin-bg);
+            border: 1px solid var(--admin-border);
+            color: var(--admin-text-secondary);
+
+            &:hover {
+                border-color: var(--admin-text-tertiary);
+                color: var(--admin-text);
+            }
+        }
+
+        &--confirm {
+            background: linear-gradient(135deg, var(--admin-accent), #FF6FA3);
+            color: #fff;
+
+            &:hover { opacity: 0.9; }
+        }
+
+        &--destructive {
+            background: #EF4444;
+            color: #fff;
+
+            &:hover { background: #DC2626; }
+        }
+    }
+}
+
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes dialogIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
