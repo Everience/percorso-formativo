@@ -1,0 +1,8 @@
+<div class="admin-shell" [attr.data-admin-theme]="themeAttr()" [class.admin-shell--collapsed]="adminUi.sidebarCollapsed()">
+    <app-admin-sidebar></app-admin-sidebar>
+    <main class="admin-main">
+        <router-outlet></router-outlet>
+    </main>
+    <app-admin-toast></app-admin-toast>
+    <app-confirm-dialog></app-confirm-dialog>
+</div>
