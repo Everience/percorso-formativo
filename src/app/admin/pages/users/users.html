@@ -1,0 +1,101 @@
+<div class="page-header">
+  <h1>Utenti</h1>
+  <p>Gestione utenti della piattaforma</p>
+</div>
+
+<section class="users-card">
+
+  <!-- ─── Toolbar ─── -->
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Cerca per nome, cognome o email..." [(ngModel)]="searchQuery" (input)="onSearchInput()" />
+      @if (searchQuery) {
+      <button class="search-box__clear" (click)="searchQuery = ''; onSearchInput()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      }
+    </div>
+    <div class="filter-group">
+      <button class="chip" [class.chip--active]="roleFilter === ''" (click)="onRoleFilter('')">Tutti</button>
+      <button class="chip chip--dev" [class.chip--active]="roleFilter === 'dev'" (click)="onRoleFilter('dev')">
+        <span class="chip__dot"></span>DEV
+      </button>
+      <button class="chip chip--tech" [class.chip--active]="roleFilter === 'tech'" (click)="onRoleFilter('tech')">
+        <span class="chip__dot"></span>TECH
+      </button>
+    </div>
+    <span class="toolbar__count"><strong>{{ meta().totalItems }}</strong> utenti</span>
+  </div>
+
+  <!-- ─── Data ─── -->
+
+  @if (loading()) {
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <span>Caricamento utenti...</span>
+  </div>
+  } @else {
+
+  <div class="col-head">
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('last_name')">
+      Utente <span class="sort-icon">{{ sortIcon('last_name') }}</span>
+    </span>
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('email')">
+      Email <span class="sort-icon">{{ sortIcon('email') }}</span>
+    </span>
+    <span class="col-head__cell">Ruolo</span>
+    <span class="col-head__cell"></span>
+  </div>
+
+  @for (user of users(); track user.id) {
+  <a class="row" [routerLink]="['/admin/users', user.id]">
+    <span class="row__user">
+      <span class="avatar">{{ userInitials(user) }}</span>
+      <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+    </span>
+    <span class="row__email">{{ user.email }}</span>
+    <span class="row__role">
+      <span [class]="roleClass(user.role)">{{ mapRole(user.role) }}</span>
+    </span>
+    <span class="row__arrow">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </span>
+  </a>
+  } @empty {
+  <div class="empty-state">Nessun utente trovato</div>
+  }
+
+  @if (meta().totalPages > 1) {
+  <div class="pagination">
+    <button class="page-btn" [disabled]="meta().currentPage <= 1" (click)="goToPage(meta().currentPage - 1)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    @for (p of pages; track p) {
+    <button class="page-btn" [class.page-btn--active]="p === meta().currentPage" (click)="goToPage(p)">{{ p }}</button>
+    }
+    <button class="page-btn" [disabled]="meta().currentPage >= meta().totalPages" (click)="goToPage(meta().currentPage + 1)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+    <span class="page-meta">Pagina {{ meta().currentPage }} di {{ meta().totalPages }}</span>
+  </div>
+  }
+
+  }
+</section>
