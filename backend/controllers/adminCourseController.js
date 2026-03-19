@@ -1,4 +1,5 @@
 const CourseModel = require('../models/courseModel');
+const MAX_COURSES_PER_ROW = 4;
 
 exports.getAllCoursesPaginated = async (req, res) => {
     try {
@@ -48,10 +49,17 @@ exports.getCourseDetail = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
     try {
-        const { title, description, category, position_row, display_order } = req.body;
+        const { title, category } = req.body;
         
         if (!title || !category) {
             return res.status(400).json({ message: 'Titolo e categoria sono obbligatori' });
+        }
+
+        const targetCategory = (category || '').toUpperCase();
+        const targetRow = Number(req.body.position_row) || 1;
+        const rowCount = await CourseModel.countCoursesInRow(targetCategory, targetRow);
+        if (rowCount >= MAX_COURSES_PER_ROW) {
+            return res.status(400).json({ message: `Riga ${targetRow} piena: massimo ${MAX_COURSES_PER_ROW} corsi` });
         }
 
         const newId = await CourseModel.createCourse(req.body);
@@ -64,7 +72,18 @@ exports.createCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
     try {
-        const success = await CourseModel.updateCourse(req.params.id, req.body);
+        const courseId = Number(req.params.id);
+        const current = await CourseModel.findById(courseId);
+        if (!current) return res.status(404).json({ message: 'Corso non trovato' });
+
+        const targetCategory = (req.body.category ?? current.category ?? '').toString().toUpperCase();
+        const targetRow = Number(req.body.position_row ?? current.position_row);
+        const rowCount = await CourseModel.countCoursesInRow(targetCategory, targetRow, courseId);
+        if (rowCount >= MAX_COURSES_PER_ROW) {
+            return res.status(400).json({ message: `Riga ${targetRow} piena: massimo ${MAX_COURSES_PER_ROW} corsi` });
+        }
+
+        const success = await CourseModel.updateCourse(courseId, req.body);
         if (!success) return res.status(404).json({ message: 'Corso non trovato' });
         res.status(200).json({ message: 'Corso aggiornato' });
     } catch (error) {
@@ -97,12 +116,6 @@ exports.getCourseResources = async (req, res) => {
 exports.createResource = async (req, res) => {
     try {
         const courseId = req.params.id;
-        const { title, platform, video_url } = req.body;
-
-        if (!title || !video_url) {
-            return res.status(400).json({ message: 'Titolo e URL sono obbligatori' });
-        }
-
         const newId = await CourseModel.createResource(courseId, req.body);
         res.status(201).json({ message: 'Risorsa creata', id: newId });
     } catch (error) {
@@ -130,5 +143,17 @@ exports.deleteResource = async (req, res) => {
     } catch (error) {
         console.error('Errore Admin Delete Resource:', error);
         res.status(500).json({ message: 'Errore nell\'eliminazione della risorsa' });
+    }
+};
+
+exports.reorderResources = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+        const { orderedIds } = req.body;
+        await CourseModel.reorderResources(courseId, orderedIds);
+        res.status(200).json({ message: 'Ordine risorse aggiornato' });
+    } catch (error) {
+        console.error('Errore Admin Reorder Resources:', error);
+        res.status(500).json({ message: 'Errore nel riordinamento delle risorse' });
     }
 };

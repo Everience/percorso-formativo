@@ -10,6 +10,10 @@ function mapRoleFromDB(user) {
     return { ...user, role: ROLE_FROM_DB[user.role] || user.role };
 }
 
+function cleanTitle(title) {
+    return (title || '').toString().replace(/\\n|\n/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 
 exports.getAllUsersPaginated = async (req, res) => {
     try {
@@ -99,8 +103,22 @@ exports.getUserProgress = async (req, res) => {
 
 
         const progress = await CourseModel.findWithProgressByUserId(userId);
-        
-        res.status(200).json(progress);
+        const primaryCategory = user.role === 'dev-user' ? 'DEV' : 'TECH';
+        const sorted = progress
+            .map(item => ({
+                ...item,
+                title: cleanTitle(item.title),
+                category: (item.category || '').toString().toUpperCase(),
+            }))
+            .sort((a, b) => {
+                const aRank = a.category === primaryCategory ? 0 : 1;
+                const bRank = b.category === primaryCategory ? 0 : 1;
+                if (aRank !== bRank) return aRank - bRank;
+                if (a.position_row !== b.position_row) return a.position_row - b.position_row;
+                return a.display_order - b.display_order;
+            });
+
+        res.status(200).json(sorted);
     } catch (error) {
         console.error('Errore Admin User Progress:', error);
         res.status(500).json({ message: 'Errore nel recupero del progresso utente' });

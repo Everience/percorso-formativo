@@ -48,7 +48,7 @@ class UserModel {
     static async countAdminUsers(searchQuery, roleFilter) {
         const pool = await poolPromise;
         const request = pool.request();
-        let query = 'SELECT COUNT(*) as total FROM Users WHERE 1=1';
+        let query = "SELECT COUNT(*) as total FROM Users WHERE role IS NOT NULL AND role != 'admin'";
 
         if (searchQuery) {
             query += ' AND (first_name LIKE @search OR last_name LIKE @search OR email LIKE @search)';
@@ -66,7 +66,7 @@ class UserModel {
     static async findAdminUsers(searchQuery, roleFilter, offset, limit, sortColumn, sortOrder) {
         const pool = await poolPromise;
         const request = pool.request();
-        let query = 'SELECT id, first_name, last_name, email, role, uid FROM Users WHERE 1=1';
+        let query = "SELECT id, first_name, last_name, email, role, uid FROM Users WHERE role IS NOT NULL AND role != 'admin'";
 
         if (searchQuery) {
             query += ' AND (first_name LIKE @search OR last_name LIKE @search OR email LIKE @search)';
@@ -88,6 +88,19 @@ class UserModel {
 
         const result = await request.query(query);
         return result.recordset;
+    }
+
+    static async getAnalytics() {
+        const pool = await poolPromise;
+        const result = await pool.request().query(`
+            SELECT
+                SUM(CASE WHEN role = 'dev-user' THEN 1 ELSE 0 END) as dev_count,
+                SUM(CASE WHEN role = 'tech-user' THEN 1 ELSE 0 END) as tech_count,
+                COUNT(*) as total
+            FROM Users
+            WHERE role IN ('dev-user', 'tech-user')
+        `);
+        return result.recordset[0];
     }
 
     static async updateRole(userId, newRole) {

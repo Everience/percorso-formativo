@@ -17,8 +17,8 @@ class CourseModel {
         const request = pool.request();
 
         if (category) {
-            query += ' WHERE category = @category';
-            request.input('category', sql.NVarChar, category.toUpperCase());
+            query += ' WHERE LOWER(category) = @category';
+            request.input('category', sql.NVarChar, category.toLowerCase());
         }
 
         query += ' ORDER BY position_row ASC, display_order ASC';
@@ -31,7 +31,7 @@ class CourseModel {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('courseId', sql.Int, courseId)
-            .query('SELECT * FROM Resources WHERE course_id = @courseId');
+            .query('SELECT * FROM Resources WHERE course_id = @courseId ORDER BY sort_order ASC, id ASC');
         
         return result.recordset;
     }
@@ -75,13 +75,13 @@ class CourseModel {
                 COALESCE(up.status, 'not_started') as status
             FROM Courses c
             LEFT JOIN UserProgress up ON c.id = up.course_id AND up.user_id = @userId
-            ORDER BY c.position_row ASC, c.display_order ASC
+            ORDER BY c.category ASC, c.position_row ASC, c.display_order ASC
         `;
-        
+
         const result = await pool.request()
             .input('userId', sql.Int, userId)
             .query(query);
-            
+
         return result.recordset;
     }
 
@@ -91,8 +91,8 @@ class CourseModel {
         let query = 'SELECT COUNT(*) as total FROM Courses WHERE 1=1';
 
         if (category) {
-            query += ' AND category = @category';
-            request.input('category', sql.NVarChar, category.toUpperCase());
+            query += ' AND LOWER(category) = @category';
+            request.input('category', sql.NVarChar, category.toLowerCase());
         }
         if (searchQuery) {
             query += ' AND (title LIKE @search OR description LIKE @search)';
@@ -109,25 +109,43 @@ class CourseModel {
         let query = 'SELECT * FROM Courses WHERE 1=1';
 
         if (category) {
-            query += ' AND category = @category';
-            request.input('category', sql.NVarChar, category.toUpperCase());
+            query += ' AND LOWER(category) = @category';
+            request.input('category', sql.NVarChar, category.toLowerCase());
         }
         if (searchQuery) {
             query += ' AND (title LIKE @search OR description LIKE @search)';
             request.input('search', sql.NVarChar, `%${searchQuery}%`);
         }
 
-        const validColumns = ['id', 'title', 'category', 'position_row', 'display_order'];
-        const orderCol = validColumns.includes(sortColumn) ? sortColumn : 'position_row';
-        const orderDir = sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
-
-        query += ` ORDER BY ${orderCol} ${orderDir} OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
+        query += ` ORDER BY category ASC, position_row ASC, display_order ASC OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY`;
         
         request.input('offset', sql.Int, offset);
         request.input('limit', sql.Int, limit);
 
         const result = await request.query(query);
         return result.recordset;
+    }
+
+    static async countCoursesInRow(category, positionRow, excludeId = null) {
+        const pool = await poolPromise;
+        const request = pool.request()
+            .input('category', sql.NVarChar, (category || '').toUpperCase())
+            .input('positionRow', sql.Int, positionRow);
+
+        let query = `
+            SELECT COUNT(*) as total
+            FROM Courses
+            WHERE UPPER(category) = @category
+              AND position_row = @positionRow
+        `;
+
+        if (excludeId !== null) {
+            query += ' AND id <> @excludeId';
+            request.input('excludeId', sql.Int, excludeId);
+        }
+
+        const result = await request.query(query);
+        return result.recordset[0]?.total ?? 0;
     }
 
     static async createCourse(data) {
@@ -215,6 +233,56 @@ class CourseModel {
             .input('id', sql.Int, resourceId)
             .query('DELETE FROM Resources WHERE id = @id');
         return result.rowsAffected[0] > 0;
+    }
+
+    static async getAnalytics() {
+        const pool = await poolPromise;
+
+        const categoriesResult = await pool.request().query(`
+            SELECT
+                SUM(CASE WHEN UPPER(category) = 'DEV' THEN 1 ELSE 0 END) as dev_count,
+                SUM(CASE WHEN UPPER(category) = 'TECH' THEN 1 ELSE 0 END) as tech_count,
+                COUNT(*) as total
+            FROM Courses
+        `);
+
+        const statsResult = await pool.request().query(`
+            SELECT
+                c.id, c.title, c.category, c.description, c.position_row, c.display_order,
+                SUM(CASE WHEN up.status = 'completed' THEN 1 ELSE 0 END) as completed_count,
+                SUM(CASE WHEN up.status = 'in_progress' THEN 1 ELSE 0 END) as in_progress_count,
+                SUM(CASE WHEN up.status = 'not_started' THEN 1 ELSE 0 END) as not_started_count
+            FROM Courses c
+            LEFT JOIN UserProgress up ON c.id = up.course_id
+            GROUP BY c.id, c.title, c.category, c.description, c.position_row, c.display_order
+            ORDER BY c.category ASC, c.position_row ASC, c.display_order ASC
+        `);
+
+        return {
+            categories: categoriesResult.recordset[0],
+            courseStats: statsResult.recordset,
+        };
+    }
+
+    static async reorderResources(courseId, orderedIds) {
+        const pool = await poolPromise;
+        const transaction = new sql.Transaction(pool);
+        await transaction.begin();
+        try {
+            for (let i = 0; i < orderedIds.length; i++) {
+                const request = new sql.Request(transaction);
+                await request
+                    .input('id', sql.Int, orderedIds[i])
+                    .input('newOrder', sql.Int, i + 1)
+                    .input('courseId', sql.Int, courseId)
+                    .query('UPDATE Resources SET sort_order = @newOrder WHERE id = @id AND course_id = @courseId');
+            }
+            await transaction.commit();
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
     }
 }
 

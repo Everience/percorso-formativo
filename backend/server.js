@@ -24,6 +24,9 @@ const courseRoutes = require('./routes/courseRoutes');
 const admin = require('firebase-admin');
 const adminUserRoutes = require('./routes/adminUserRoutes');
 const adminCourseRoutes = require('./routes/adminCourseRoutes');
+const adminAnalyticsRoutes = require('./routes/adminAnalyticsRoutes');
+const verificaAdmin = require('./middlewares/adminMiddleware');
+const adminAnalyticsController = require('./controllers/adminAnalyticsController');
 
 /* PRODUCTION */
 /*
@@ -41,6 +44,10 @@ app.use('/api/courses', courseRoutes);
 
 app.use('/api/admin/users', adminUserRoutes);
 app.use('/api/admin/courses', adminCourseRoutes);
+app.use('/api/admin/analytics', adminAnalyticsRoutes);
+
+// Fallback direct route for analytics (ensures endpoint exists even if router loading changes)
+app.get('/api/admin/analytics', verificaAdmin, adminAnalyticsController.getOverview);
 
 // Test route
 app.get('/', (req, res) => {
