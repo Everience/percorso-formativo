@@ -14,7 +14,7 @@
           @case ('straight') {
             <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
           }
-          @case ('split-s') {
+          @case ('pair-s-top') {
             <div class="arrow-row">
               <div class="arrow-row__left">
                 <img src="/images/arrows/s-left-top.svg" alt="Arrow" class="arrow">
@@ -24,13 +24,24 @@
               </div>
             </div>
           }
-          @case ('merge-s') {
+          @case ('pair-s-bottom') {
             <div class="arrow-row">
               <div class="arrow-row__left">
                 <img src="/images/arrows/s-left-bottom.svg" alt="Arrow" class="arrow">
               </div>
               <div class="arrow-row__right">
                 <img src="/images/arrows/s-right-bottom.svg" alt="Arrow" class="arrow">
+              </div>
+            </div>
+          }
+          @case ('pair-m-top') {
+            <div class="arrow-row">
+              <div class="arrow-row__left">
+                <img src="/images/arrows/m-left-top.svg" alt="Arrow" class="arrow">
+              </div>
+              <div class="arrow-row__right">
+                <img src="/images/arrows/straight.svg" alt="Arrow" class="arrow">
+                <img src="/images/arrows/m-right-top.svg" alt="Arrow" class="arrow">
               </div>
             </div>
           }
@@ -85,7 +96,24 @@
       }
     }
 
-    <img src="/images/arrows/straight-l.svg" alt="Arrow" class="arrow">
+    @switch (getTailArrowPattern()) {
+      @case ('merge-tail') {
+        <div class="arrow-row arrow-row--tail">
+          <div class="arrow-row__left">
+            <img src="/images/arrows/s-left-bottom.svg" alt="Arrow" class="arrow">
+          </div>
+          <div class="arrow-row__center">
+            <img src="/images/arrows/straight-l.svg" alt="Arrow" class="arrow">
+          </div>
+          <div class="arrow-row__right">
+            <img src="/images/arrows/s-right-bottom.svg" alt="Arrow" class="arrow">
+          </div>
+        </div>
+      }
+      @default {
+        <img src="/images/arrows/straight-l.svg" alt="Arrow" class="arrow">
+      }
+    }
     <div class="row">
       <app-glass-elem [text]="oppositeLabel()" type="link" (click)="goToOpposite()"></app-glass-elem>
     </div>

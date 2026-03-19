@@ -51,7 +51,8 @@
   justify-content: center;
 
   &__left,
-  &__right {
+  &__right,
+  &__center {
     display: grid;
 
     .arrow {
@@ -69,6 +70,20 @@
     .arrow {
       justify-self: start;
     }
+  }
+
+  &__center .arrow {
+    justify-self: center;
+  }
+
+  &--tail {
+    --tail-join-offset: 32px;
+    margin-bottom: -2px;
+    align-items: flex-start;
+  }
+
+  &--tail &__center .arrow {
+    transform: translateY(var(--tail-join-offset));
   }
 }
 

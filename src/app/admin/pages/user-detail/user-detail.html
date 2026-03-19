@@ -1,0 +1,158 @@
+<a routerLink="/admin/users" class="back-link">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  Torna alla lista
+</a>
+
+@if (loading()) {
+<div class="loading-state">
+  <div class="spinner"></div>
+  <span>Caricamento utente...</span>
+</div>
+} @else if (user(); as u) {
+
+<header class="user-header">
+  <div class="user-header__left">
+    <div class="avatar">{{ u.first_name[0].toUpperCase() }}{{ u.last_name[0].toUpperCase() }}</div>
+    <div class="user-header__identity">
+      <h1>{{ u.first_name }} {{ u.last_name }}</h1>
+      <span class="user-header__email">{{ u.email }}</span>
+    </div>
+  </div>
+  <div class="user-header__right">
+    <div class="role-switcher">
+      <span class="role-switcher__label">Ruolo</span>
+      <div class="role-switcher__track">
+        <button class="role-switcher__btn"
+          [class.role-switcher__btn--active]="selectedRole === 'dev'"
+          (click)="selectRole('dev')">
+          <span class="role-switcher__dot role-switcher__dot--dev"></span>
+          Dev
+        </button>
+        <button class="role-switcher__btn"
+          [class.role-switcher__btn--active]="selectedRole === 'tech'"
+          (click)="selectRole('tech')">
+          <span class="role-switcher__dot role-switcher__dot--tech"></span>
+          Tech
+        </button>
+      </div>
+      <button class="btn-save" (click)="saveRole()" [disabled]="saving() || selectedRole === currentMappedRole">
+        {{ saving() ? 'Salvataggio...' : 'Salva' }}
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="overview-strip">
+  <div class="overview-item">
+    <span class="overview-item__value">{{ globalStats.pct }}%</span>
+    <span class="overview-item__label">Completamento globale</span>
+  </div>
+  <div class="overview-item">
+    <span class="overview-item__value">{{ globalStats.completed }}<small>/{{ globalStats.total }}</small></span>
+    <span class="overview-item__label">Corsi completati</span>
+  </div>
+  <div class="overview-item">
+    <span class="overview-item__value">{{ globalStats.inProgress }}</span>
+    <span class="overview-item__label">In corso</span>
+  </div>
+  <div class="overview-item">
+    <span class="overview-item__value">{{ globalStats.notStarted }}</span>
+    <span class="overview-item__label">Da iniziare</span>
+  </div>
+  <div class="overview-bar">
+    <div class="overview-bar__fill overview-bar__fill--completed" [style.width.%]="globalStats.pct"></div>
+    <div class="overview-bar__fill overview-bar__fill--progress" [style.width.%]="globalStats.total > 0 ? (globalStats.inProgress / globalStats.total * 100) : 0"></div>
+  </div>
+</div>
+
+<div class="courses-grid">
+  <section class="category-panel">
+    <div class="category-panel__head">
+      <div class="category-panel__title">
+        <span class="cat-chip" [class]="'cat-chip--' + primaryCategory().toLowerCase()">{{ primaryCategory() }}</span>
+        <h2>Corsi principali</h2>
+      </div>
+      <div class="category-panel__ring">
+        <svg viewBox="0 0 36 36" class="ring-svg">
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--admin-border)" stroke-width="2.5" />
+          <circle cx="18" cy="18" r="15.915" fill="none"
+            [attr.stroke]="primaryCategory() === 'DEV' ? '#3B82F6' : '#8B5CF6'"
+            stroke-width="2.5"
+            stroke-dasharray="100"
+            [attr.stroke-dashoffset]="100 - stats(primaryCourses()).pct"
+            stroke-linecap="round"
+            transform="rotate(-90 18 18)" />
+        </svg>
+        <span class="ring-value">{{ stats(primaryCourses()).pct }}%</span>
+      </div>
+    </div>
+    <div class="category-panel__stats">
+      <span>{{ stats(primaryCourses()).completed }} completati</span>
+      <span class="sep">·</span>
+      <span>{{ stats(primaryCourses()).inProgress }} in corso</span>
+      <span class="sep">·</span>
+      <span>{{ stats(primaryCourses()).notStarted }} da iniziare</span>
+    </div>
+    <div class="course-list">
+      @for (course of primaryCourses(); track course.id) {
+      <div class="course-row">
+        <span class="dot" [class]="statusDot(course.status)"></span>
+        <span class="course-row__pos">R{{ course.position_row }}.{{ course.display_order }}</span>
+        <span class="course-row__title">{{ course.title }}</span>
+        <span class="course-row__status">{{ statusText(course.status) }}</span>
+      </div>
+      } @empty {
+      <p class="empty-text">Nessun corso {{ primaryCategory() }}</p>
+      }
+    </div>
+  </section>
+
+  <section class="category-panel">
+    <div class="category-panel__head">
+      <div class="category-panel__title">
+        <span class="cat-chip" [class]="'cat-chip--' + secondaryCategory().toLowerCase()">{{ secondaryCategory() }}</span>
+        <h2>Altri corsi</h2>
+      </div>
+      <div class="category-panel__ring">
+        <svg viewBox="0 0 36 36" class="ring-svg">
+          <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--admin-border)" stroke-width="2.5" />
+          <circle cx="18" cy="18" r="15.915" fill="none"
+            [attr.stroke]="secondaryCategory() === 'DEV' ? '#3B82F6' : '#8B5CF6'"
+            stroke-width="2.5"
+            stroke-dasharray="100"
+            [attr.stroke-dashoffset]="100 - stats(secondaryCourses()).pct"
+            stroke-linecap="round"
+            transform="rotate(-90 18 18)" />
+        </svg>
+        <span class="ring-value">{{ stats(secondaryCourses()).pct }}%</span>
+      </div>
+    </div>
+    <div class="category-panel__stats">
+      <span>{{ stats(secondaryCourses()).completed }} completati</span>
+      <span class="sep">·</span>
+      <span>{{ stats(secondaryCourses()).inProgress }} in corso</span>
+      <span class="sep">·</span>
+      <span>{{ stats(secondaryCourses()).notStarted }} da iniziare</span>
+    </div>
+    <div class="course-list">
+      @for (course of secondaryCourses(); track course.id) {
+      <div class="course-row">
+        <span class="dot" [class]="statusDot(course.status)"></span>
+        <span class="course-row__pos">R{{ course.position_row }}.{{ course.display_order }}</span>
+        <span class="course-row__title">{{ course.title }}</span>
+        <span class="course-row__status">{{ statusText(course.status) }}</span>
+      </div>
+      } @empty {
+      <p class="empty-text">Nessun corso {{ secondaryCategory() }}</p>
+      }
+    </div>
+  </section>
+</div>
+
+<div class="legend">
+  <span class="legend__item"><span class="dot dot--completed"></span>Completato</span>
+  <span class="legend__item"><span class="dot dot--progress"></span>In corso</span>
+  <span class="legend__item"><span class="dot dot--not-started"></span>Da iniziare</span>
+</div>
+
+}

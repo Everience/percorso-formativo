@@ -13,7 +13,8 @@ export interface RoadmapRow {
   rightHalf: Course[];
 }
 
-export type ArrowPattern = 'straight' | 'split-s' | 'merge-s' | 'split-m' | 'split-l';
+export type ArrowPattern = 'straight' | 'pair-s-top' | 'pair-s-bottom' | 'pair-m-top' | 'split-m' | 'split-l';
+export type TailArrowPattern = 'straight-tail' | 'merge-tail';
 
 @Component({
   selector: 'app-roadmap',
@@ -104,22 +105,37 @@ export class Roadmap {
     return title.replace(/\\n|\n/g, '<br>');
   }
 
+  private getRowCount(row: RoadmapRow | undefined): number {
+    if (!row) return 1;
+    return row.isLabel ? 1 : row.items.length;
+  }
+
   getArrowPattern(index: number): ArrowPattern {
     const rows = this.rows();
     const prev = rows[index];
     const next = rows[index + 1];
 
-    const prevCount = prev.isLabel ? 1 : prev.items.length;
-    const nextCount = next.isLabel ? 1 : next.items.length;
+    const prevCount = this.getRowCount(prev);
+    const nextCount = this.getRowCount(next);
 
     if (prevCount === 1 && nextCount === 1) return 'straight';
-    if (prevCount === 1 && nextCount === 2) return 'split-s';
+    if (prevCount === 1 && nextCount === 2) return 'pair-s-top';
     if (prevCount === 1 && nextCount === 3) return 'split-m';
     if (prevCount === 1 && nextCount >= 4) return 'split-l';
-    if (prevCount === 3 && nextCount === 1) return 'straight';
-    if (prevCount > 1 && nextCount === 1) return 'merge-s';
+    if (prevCount === 3 && nextCount === 2) return 'pair-s-top';
+    if (prevCount === 2 && nextCount === 2) return 'pair-s-bottom';
+    if (prevCount === 2 && nextCount === 3) return 'pair-m-top';
+    if (prevCount > 1 && nextCount === 1) return 'pair-s-bottom';
 
     return 'straight';
+  }
+
+  getTailArrowPattern(): TailArrowPattern {
+    const rows = this.rows();
+    const lastRow = rows[rows.length - 1];
+    const lastCount = this.getRowCount(lastRow);
+    if (lastCount === 2 || lastCount === 4) return 'merge-tail';
+    return 'straight-tail';
   }
 
   goToOpposite(): void {

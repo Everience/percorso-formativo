@@ -1,0 +1,7 @@
+<div class="kpi" [class]="'kpi--' + color()">
+    <span class="kpi__label">{{ label() }}</span>
+    <span class="kpi__value">{{ value() }}</span>
+    @if (sublabel()) {
+    <span class="kpi__sublabel">{{ sublabel() }}</span>
+    }
+</div>

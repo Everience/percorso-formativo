@@ -1,0 +1,172 @@
+<a routerLink="/admin/courses" class="back-link">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  Torna ai corsi
+</a>
+
+@if (loading()) {
+<div class="loading-state">
+  <div class="spinner"></div>
+  <span>Caricamento corso...</span>
+</div>
+} @else if (course(); as c) {
+
+<header class="course-header">
+  <div class="course-header__left">
+    <div class="course-header__preview" [class.course-header__preview--cert]="isCertification"
+      [innerHTML]="formatTitle(c.title)">
+    </div>
+    <div class="course-header__meta">
+      <h1>{{ cleanTitle(c.title) }}</h1>
+      <div class="course-header__tags">
+        <span class="cat-chip" [class]="'cat-chip--' + editData.category.toLowerCase()">{{ editData.category }}</span>
+        <span class="pos-chip">R{{ c.position_row }}.{{ c.display_order }}</span>
+        @if (isCertification) {
+          <span class="cert-chip">Certificazione</span>
+        }
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="detail-grid">
+  <section class="card">
+    <div class="card__head">
+      <h2>Informazioni corso</h2>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field form-field--full">
+        <label>Titolo</label>
+        <input type="text" [(ngModel)]="editData.title" />
+      </div>
+      <div class="form-field">
+        <label>Categoria</label>
+        <div class="cat-toggle">
+          <button [class.cat-toggle__btn--active]="editData.category === 'DEV'" (click)="editData.category = 'DEV'">
+            <span class="cat-toggle__dot cat-toggle__dot--dev"></span>Dev
+          </button>
+          <button [class.cat-toggle__btn--active]="editData.category === 'TECH'" (click)="editData.category = 'TECH'">
+            <span class="cat-toggle__dot cat-toggle__dot--tech"></span>Tech
+          </button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Riga posizione</label>
+        <input type="number" [(ngModel)]="editData.position_row" min="1" />
+      </div>
+      <div class="form-field">
+        <label>Ordine nella riga</label>
+        <input type="number" [(ngModel)]="editData.display_order" min="1" max="4" />
+        <span class="hint">Massimo 4 corsi per riga</span>
+      </div>
+      <div class="form-field form-field--full">
+        <label>Descrizione <span class="hint">(vuoto = certificazione)</span></label>
+        <textarea [(ngModel)]="editData.description" rows="4"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="primary-btn" (click)="saveCourse()" [disabled]="saving() || !hasChanges">
+        {{ saving() ? 'Salvataggio...' : 'Salva modifiche' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card__head">
+      <h2>Risorse <span class="resource-count">{{ resources().length }}</span></h2>
+      @if (!isCertification) {
+        <button class="secondary-btn" (click)="toggleAddResource()">
+          @if (showAddResource) { Annulla } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Aggiungi
+          }
+        </button>
+      }
+    </div>
+
+    @if (showAddResource && !isCertification) {
+    <div class="resource-form">
+      <div class="resource-form__grid">
+        <div class="form-field">
+          <label>Titolo</label>
+          <input type="text" [(ngModel)]="newResource.title" placeholder="Nome della risorsa" />
+        </div>
+        <div class="form-field">
+          <label>Piattaforma</label>
+          <div class="platform-toggle">
+            <button [class.platform-toggle__btn--active]="newResource.platform === 'Udemy'" (click)="newResource.platform = 'Udemy'">Udemy</button>
+            <button [class.platform-toggle__btn--active]="newResource.platform === 'YouTube'" (click)="newResource.platform = 'YouTube'">YouTube</button>
+            <button [class.platform-toggle__btn--active]="newResource.platform === ''" (click)="newResource.platform = ''">Altro</button>
+          </div>
+        </div>
+        <div class="form-field form-field--full">
+          <label>URL risorsa</label>
+          <input type="text" [(ngModel)]="newResource.video_url" placeholder="URL della risorsa" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="primary-btn" (click)="addResource()" [disabled]="!newResource.title || !newResource.video_url">Aggiungi risorsa</button>
+      </div>
+    </div>
+    }
+
+    <div class="resource-list" cdkDropList (cdkDropListDropped)="onResourceDrop($event)">
+      @for (resource of resources(); track resource.id) {
+      <div class="resource-item" cdkDrag>
+        <div class="drag-handle" cdkDragHandle>
+          <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="2.5" cy="2" r="1.2"/><circle cx="7.5" cy="2" r="1.2"/><circle cx="2.5" cy="7" r="1.2"/><circle cx="7.5" cy="7" r="1.2"/><circle cx="2.5" cy="12" r="1.2"/><circle cx="7.5" cy="12" r="1.2"/></svg>
+        </div>
+
+        @if (editingResourceId === resource.id) {
+        <div class="resource-edit">
+          <input type="text" [(ngModel)]="editResource.title" placeholder="Titolo" />
+          <div class="platform-toggle platform-toggle--sm">
+            <button [class.platform-toggle__btn--active]="editResource.platform === 'Udemy'" (click)="editResource.platform = 'Udemy'">Udemy</button>
+            <button [class.platform-toggle__btn--active]="editResource.platform === 'YouTube'" (click)="editResource.platform = 'YouTube'">YouTube</button>
+            <button [class.platform-toggle__btn--active]="editResource.platform === ''" (click)="editResource.platform = ''">Altro</button>
+          </div>
+          <input type="text" [(ngModel)]="editResource.video_url" placeholder="URL" />
+          <div class="resource-edit__actions">
+            <button class="btn-sm btn-sm--save" (click)="saveResource(resource.id)" [disabled]="!resourceHasChanges(resource)">Salva</button>
+            <button class="btn-sm btn-sm--cancel" (click)="cancelEditResource()">Annulla</button>
+          </div>
+        </div>
+        } @else {
+        <div class="resource-info">
+          <div class="resource-main">
+            <span [class]="platformClass(resource)">{{ platformLabel(resource) }}</span>
+            <span class="resource-title">{{ cleanTitle(resource.title) }}</span>
+          </div>
+          <a class="resource-url" [href]="resource.video_url" target="_blank" rel="noopener">{{ resource.video_url }}</a>
+        </div>
+        <div class="resource-actions">
+          <button class="resource-btn resource-btn--edit" (click)="startEditResource(resource)">
+            <span class="resource-btn__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </span>
+            <span class="resource-btn__label">Modifica</span>
+          </button>
+          <button class="resource-btn resource-btn--delete" (click)="deleteResource(resource)">
+            <span class="resource-btn__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </span>
+            <span class="resource-btn__label">Elimina</span>
+          </button>
+        </div>
+        }
+      </div>
+      } @empty {
+      <div class="empty-state">
+        @if (isCertification) {
+          <p>Le certificazioni non hanno risorse collegate</p>
+        } @else {
+          <p>Nessuna risorsa collegata a questo corso</p>
+        }
+      </div>
+      }
+    </div>
+  </section>
+</div>
+
+}

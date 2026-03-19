@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const guestGuard: CanActivateFn = async () => {
+export const userGuard: CanActivateFn = async () => {
     const auth = inject(AuthService);
     const router = inject(Router);
 
@@ -11,14 +11,14 @@ export const guestGuard: CanActivateFn = async () => {
     }
 
     if (!auth.isLoggedIn()) {
-        return true;
+        return router.createUrlTree(['/login']);
     }
 
-    const role = auth.userRole();
-    if (role === 'admin') {
+    if (auth.userRole() === 'admin') {
         return router.createUrlTree(['/admin']);
     }
-    return router.createUrlTree([`/${role ?? 'dev'}`]);
+
+    return true;
 };
 
 function waitUntilReady(auth: AuthService): Promise<void> {

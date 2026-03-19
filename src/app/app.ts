@@ -20,7 +20,12 @@ export class App {
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       takeUntilDestroyed(),
     ).subscribe((e) => {
-      doc.body.className = e.urlAfterRedirects.slice(1);
+      const url = e.urlAfterRedirects.slice(1);
+      if (url.startsWith('admin')) {
+        doc.body.className = 'admin';
+      } else {
+        doc.body.className = url;
+      }
     });
   }
 }

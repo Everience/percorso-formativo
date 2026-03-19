@@ -37,12 +37,53 @@
   --radius-course-platform: 0.5rem;
 }
 
+/* Admin theme — Light (warm purple undertone, echoing v1.0) */
+[data-admin-theme="light"] {
+  --admin-bg: #F6F5FA;
+  --admin-bg-card: rgba(255, 255, 255, 0.9);
+  --admin-bg-secondary: #EFEDF5;
+  --admin-text: #1F1D35;
+  --admin-text-secondary: #5B5878;
+  --admin-text-tertiary: #817E9B;
+  --admin-border: #E2DFEE;
+  --admin-border-light: #EDEBF5;
+  --admin-sidebar-bg: rgba(255, 255, 255, 0.94);
+  --admin-hover: #EFEDF8;
+  --admin-active: #E7E4F2;
+  --admin-accent: #E8467C;
+  --admin-accent-soft: rgba(232, 70, 124, 0.08);
+  --admin-cert-bg: rgba(218, 180, 46, 0.1);
+}
+
+/* Admin theme — Dark (deep purple, v1.0 kinship) */
+[data-admin-theme="dark"] {
+  --admin-bg: #15132A;
+  --admin-bg-card: rgba(35, 32, 60, 0.78);
+  --admin-bg-secondary: #1E1C34;
+  --admin-text: #EDEBF5;
+  --admin-text-secondary: #B0ADCA;
+  --admin-text-tertiary: #7E7B9A;
+  --admin-border: #302D4A;
+  --admin-border-light: #2A2745;
+  --admin-sidebar-bg: rgba(20, 18, 38, 0.95);
+  --admin-hover: #252242;
+  --admin-active: #302D4C;
+  --admin-accent: #FF6FA3;
+  --admin-accent-soft: rgba(255, 111, 163, 0.12);
+  --admin-cert-bg: rgba(218, 180, 46, 0.12);
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-family: var(--font-family);
   color: var(--color-text);
+}
+
+[data-admin-theme],
+[data-admin-theme] * {
+  color: inherit;
 }
 
 img {
@@ -62,5 +103,10 @@ body {
 
   &.tech {
     background-image: url('/images/backgrounds/bg-tech.jpg');
+  }
+
+  &.admin {
+    background-image: none;
+    background-color: var(--admin-bg, #F6F5FA);
   }
 }

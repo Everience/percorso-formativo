@@ -1,0 +1,19 @@
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--admin-bg);
+  color: var(--admin-text);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  margin-left: 260px;
+  padding: 2rem 2.5rem;
+  transition: margin-left 0.25s ease;
+}
+
+.admin-shell--collapsed .admin-main {
+  margin-left: 72px;
+}

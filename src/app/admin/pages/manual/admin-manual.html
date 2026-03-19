@@ -1,0 +1,320 @@
+<header class="manual-header">
+  <h1>Manuale Amministratore</h1>
+  <p class="subtitle">La guida completa all'area admin di <strong>Percorso Formativo</strong></p>
+</header>
+
+<div class="manual-layout">
+  <nav class="toc" [class.toc--visible]="tocOpen()" aria-label="Indice del manuale" role="navigation">
+    <button class="toc__toggle" (click)="toggleToc()" aria-label="Mostra indice">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Indice
+    </button>
+
+    <div class="toc__body">
+      <h3 class="toc__title">Indice</h3>
+
+      <div class="toc__container">
+        <div class="toc__progress-track" aria-hidden="true">
+          <div class="toc__progress-fill" [style.height.%]="scrollProgress()"></div>
+        </div>
+
+        <ul class="toc__list">
+          <li><a (click)="scrollTo('introduzione')" [class.active]="activeSection() === 'introduzione'"
+            [attr.aria-current]="activeSection() === 'introduzione' ? 'step' : null">Introduzione</a></li>
+          <li><a (click)="scrollTo('dashboard')" [class.active]="activeSection() === 'dashboard'"
+            [attr.aria-current]="activeSection() === 'dashboard' ? 'step' : null">Dashboard</a></li>
+          <li><a (click)="scrollTo('utenti')" [class.active]="activeSection() === 'utenti'"
+            [attr.aria-current]="activeSection() === 'utenti' ? 'step' : null">Gestione Utenti</a></li>
+          <li><a (click)="scrollTo('corsi')" [class.active]="activeSection() === 'corsi'"
+            [attr.aria-current]="activeSection() === 'corsi' ? 'step' : null">Gestione Corsi</a></li>
+          <li><a (click)="scrollTo('risorse')" [class.active]="activeSection() === 'risorse'"
+            [attr.aria-current]="activeSection() === 'risorse' ? 'step' : null">Gestione Risorse</a></li>
+          <li><a (click)="scrollTo('certificazioni')" [class.active]="activeSection() === 'certificazioni'"
+            [attr.aria-current]="activeSection() === 'certificazioni' ? 'step' : null">Certificazioni</a></li>
+          <li><a (click)="scrollTo('policy')" [class.active]="activeSection() === 'policy'"
+            [attr.aria-current]="activeSection() === 'policy' ? 'step' : null">Policy e Ruoli</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="manual-content">
+
+    <section class="card" id="introduzione">
+      <div class="card__number">1</div>
+      <h2>Introduzione</h2>
+      <p>L'area amministrativa consente di gestire in modo centralizzato gli utenti, i corsi, le risorse didattiche e la struttura delle roadmaps. Ogni modifica viene riflessa immediatamente nell'esperienza della piattaforma.</p>
+      <p>Le sezioni principali sono accessibili dalla sidebar:</p>
+      <ul>
+        <li><strong>Dashboard</strong> — monitoraggio KPI, classifiche e stato complessivo dei corsi.</li>
+        <li><strong>Utenti</strong> — gestione ruoli e monitoraggio progressi individuali.</li>
+        <li><strong>Corsi</strong> — creazione, modifica, ordinamento roadmaps e gestione risorse.</li>
+        <li><strong>Manuale</strong> — questa guida operativa.</li>
+      </ul>
+      <div class="callout callout--info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <p><strong>Accesso:</strong> solo utenti con ruolo <code>admin</code> possono entrare in <code>/admin</code>. Gli utenti <code>dev</code> e <code>tech</code> vengono automaticamente reindirizzati alle proprie roadmap.</p>
+      </div>
+    </section>
+
+    <section class="card" id="dashboard">
+      <div class="card__number">2</div>
+      <h2>Dashboard</h2>
+      <p>La Dashboard è la vista di controllo iniziale. Offre una sintesi operativa immediata con indicatori navigabili.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+          KPI principali
+        </h3>
+        <ul>
+          <li><strong>Utenti totali</strong> — include esclusivamente utenti con ruolo Dev/Tech, con dettaglio per categoria.</li>
+          <li><strong>Corsi totali</strong> — conteggio dei corsi didattici (le certificazioni non rientrano nel totale KPI).</li>
+          <li><strong>Completamento medio</strong> — percentuale aggregata calcolata su tutti i corsi didattici e su tutti gli utenti Dev/Tech.</li>
+        </ul>
+        <p>Le card <strong>Utenti</strong> e <strong>Corsi</strong> sono cliccabili e aprono direttamente la sezione corrispondente.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Classifiche e tabella corsi
+        </h3>
+        <ul>
+          <li><strong>Più completati</strong> — top 5 corsi con la percentuale di completamento più alta.</li>
+          <li><strong>Da migliorare</strong> — bottom 5 corsi con tasso di completamento più basso.</li>
+          <li><strong>Panoramica corsi</strong> — distribuzione per stato (<em>Completato</em>, <em>In corso</em>, <em>Da iniziare</em>) per ciascun corso.</li>
+        </ul>
+        <p>Cliccando una riga o una voce in classifica, si apre il <strong>dettaglio corso</strong> in <code>/admin/courses/:id</code>.</p>
+      </div>
+
+      <div class="callout callout--tip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.75A4 4 0 0 1 9 18h6a4 4 0 0 1 1-3.25A7 7 0 0 0 12 2z"></path></svg>
+        <p><strong>Lettura corretta dei dati:</strong> le certificazioni sono volutamente escluse dai confronti prestazionali perché rappresentano milestone visive, e non contenuti didattici.</p>
+      </div>
+    </section>
+
+    <section class="card" id="utenti">
+      <div class="card__number">3</div>
+      <h2>Gestione Utenti</h2>
+      <p>La sezione mostra solo utenti con ruolo <code>dev</code> e <code>tech</code>. È progettata per interventi rapidi su assegnazione ruolo e monitoraggio dell'avanzamento formativo.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Ricerca, filtri, ordinamento e pagine
+        </h3>
+        <ul>
+          <li><strong>Ricerca live</strong> su nome, cognome ed email.</li>
+          <li><strong>Filtri rapidi</strong> per ruolo <code>dev</code> e <code>tech</code>.</li>
+          <li><strong>Ordinamento</strong> per cognome o email, ascendente/discendente.</li>
+          <li><strong>Paginazione</strong> con navigazione per pagina corrente.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Dettaglio utente
+        </h3>
+        <p>Dal dettaglio puoi gestire ruolo e progresso con vista comparativa Dev/Tech.</p>
+        <ol class="step-list">
+          <li><span>Apri l'utente dalla lista per visualizzare profilo e statistiche globali.</span></li>
+          <li><span>Imposta il ruolo tramite selettore a segmento e salva cliccando su <strong>Salva</strong>.</span></li>
+          <li><span>Analizza i corsi in due pannelli: <strong>categoria primaria</strong> (coerente col ruolo) e <strong>secondaria</strong>.</span></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--warning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <p><strong>Limitazione intenzionale:</strong> dal pannello non è possibile assegnare il ruolo <code>admin</code>. La promozione ad amministratore avviene solo a livello database.</p>
+      </div>
+    </section>
+
+    <section class="card" id="corsi">
+      <div class="card__number">4</div>
+      <h2>Gestione Corsi</h2>
+      <p>La sezione Corsi combina catalogo, struttura roadmap e operazioni rapide in un'unica interfaccia.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Creazione nuovo corso
+        </h3>
+        <p>Con il pulsante <strong>Nuovo corso</strong> puoi creare rapidamente un nuovo corso nella roadmap.</p>
+        <ul>
+          <li><strong>Titolo</strong> e <strong>Categoria</strong> sono obbligatori.</li>
+          <li><strong>Riga posizione</strong> e <strong>Ordine nella riga</strong> determinano il layout iniziale.</li>
+          <li><strong>Capienza riga</strong>: ogni riga accetta un massimo di <strong>4 corsi</strong>.</li>
+          <li><strong>Descrizione vuota</strong> crea una certificazione.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+          Roadmap interattiva con drag-and-drop
+        </h3>
+        <p>Le tab <code>DEV</code> e <code>TECH</code> separano i percorsi. Ogni card è trascinabile con handle laterale a sinistra.</p>
+        <ol class="step-list">
+          <li><span>Trascina un corso nella stessa riga per riordinare la sequenza.</span></li>
+          <li><span>Trascina un corso su un'altra riga per cambiare struttura del percorso, solo se la riga di destinazione ha meno di 4 corsi.</span></li>
+          <li><span>Puoi trascinare anche nella <strong>Nuova riga</strong> per creare automaticamente un nuovo livello.</span></li>
+          <li><span>Al rilascio, il sistema rinumera righe e ordini in modo consecutivo e salva sul backend.</span></li>
+        </ol>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          Dettaglio, modifica ed eliminazione
+        </h3>
+        <ul>
+          <li>Clic su una card per aprire il dettaglio corso.</li>
+          <li>Modifica titolo, categoria, posizione, descrizione e salva solo se presenti cambiamenti.</li>
+          <li>Eliminazione corso protetta da conferma esplicita.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="risorse">
+      <div class="card__number">5</div>
+      <h2>Gestione Risorse</h2>
+      <p>Le risorse sono gestite nel dettaglio corso e rappresentano i contenuti esterni associati alla formazione.</p>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Aggiunta risorse
+        </h3>
+        <p>Con <strong>Aggiungi</strong> inserisci titolo, piattaforma e URL. Le piattaforme supportate sono <strong>Udemy</strong>, <strong>YouTube</strong> e <strong>Altro</strong>.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          Riordinamento drag-and-drop
+        </h3>
+        <p>Trascinando una risorsa cambi il suo ordine di visualizzazione. Il nuovo ordinamento viene salvato immediatamente.</p>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          Modifica ed eliminazione
+        </h3>
+        <p>La modifica avviene inline; l'eliminazione richiede sempre conferma. Entrambe le azioni mostrano feedback tramite toast.</p>
+      </div>
+
+      <div class="callout callout--info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <p><strong>Nota:</strong> le certificazioni non espongono la gestione risorse, perché sono milestone e non corsi con contenuto didattico navigabile.</p>
+      </div>
+    </section>
+
+    <section class="card" id="certificazioni">
+      <div class="card__number">6</div>
+      <h2>Certificazioni</h2>
+      <p>Una certificazione è un corso con <strong>descrizione vuota</strong>. In roadmap utente viene mostrata come elemento speciale dorato.</p>
+      <div class="cert-preview">
+        <div class="cert-elem">Certificazione</div>
+        <span class="cert-caption">Aspetto della milestone nella roadmap utente</span>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Come creare una certificazione
+        </h3>
+        <ol class="step-list">
+          <li><span>Crea un nuovo corso o modifica un corso esistente.</span></li>
+          <li><span>Lascia il campo <strong>Descrizione</strong> vuoto.</span></li>
+          <li><span>Usa un titolo coerente, ad esempio <strong>Certificazione</strong> o <strong>Certificazioni</strong>.</span></li>
+        </ol>
+      </div>
+
+      <div class="callout callout--tip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12.75A4 4 0 0 1 9 18h6a4 4 0 0 1 1-3.25A7 7 0 0 0 12 2z"></path></svg>
+        <p><strong>Best practice:</strong> usa le certificazioni come separatori di fase tra blocchi formativi.</p>
+      </div>
+    </section>
+
+    <section class="card" id="policy">
+      <div class="card__number">7</div>
+      <h2>Policy e Ruoli</h2>
+      <p>Di seguito la mappatura ruoli applicativi e regole di accesso:</p>
+      <table class="policy-table">
+        <thead>
+          <tr>
+            <th>Ruolo (DB)</th>
+            <th>Accesso</th>
+            <th>Descrizione</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>dev-user</code></td>
+            <td>/dev, /tech</td>
+            <td>Utente con percorso principale Dev e accesso ai corsi Tech.</td>
+          </tr>
+          <tr>
+            <td><code>tech-user</code></td>
+            <td>/tech, /dev</td>
+            <td>Utente con percorso principale Tech e accesso ai corsi Dev.</td>
+          </tr>
+          <tr>
+            <td><code>admin</code></td>
+            <td>/admin</td>
+            <td>Amministratore con accesso a gestione utenti, corsi, risorse e analytics.</td>
+          </tr>
+          <tr>
+            <td><code>NULL</code></td>
+            <td>Nessuno</td>
+            <td>Utente non profilato, escluso dalla gestione admin.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Regole di navigazione
+        </h3>
+        <ul>
+          <li>Gli utenti Dev/Tech possono passare tra <code>/dev</code> e <code>/tech</code>.</li>
+          <li>Gli utenti Dev/Tech non possono accedere a <code>/admin</code>.</li>
+          <li>L'utente Admin non può accedere alle route utente <code>/dev</code>, <code>/tech</code> e <code>/user-manual</code>.</li>
+          <li>Il login applica un redirect automatico in base al ruolo.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M12 3v18"></path></svg>
+          Affidabilità operativa
+        </h3>
+        <ul>
+          <li>Le azioni distruttive richiedono conferma tramite dialog dedicato.</li>
+          <li>Ogni operazione mostra feedback immediato tramite toast di successo o errore.</li>
+          <li>Le API admin richiedono token valido e verifica server-side del ruolo <code>admin</code>.</li>
+        </ul>
+      </div>
+
+      <div class="callout callout--warning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <p><strong>Attenzione:</strong> modifica ruoli e struttura roadmap in modo controllato. Le variazioni impattano subito la visibilità corsi e la lettura KPI.</p>
+      </div>
+    </section>
+
+    <p class="last-update">Manuale aggiornato al 19 Marzo 2026</p>
+  </main>
+</div>
+
+@if (showBackToTop()) {
+<button class="back-to-top" (click)="scrollToTop()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="19" x2="12" y2="5"></line>
+    <polyline points="5 12 12 5 19 12"></polyline>
+  </svg>
+</button>
+}
