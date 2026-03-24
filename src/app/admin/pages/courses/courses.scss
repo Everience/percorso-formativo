@@ -327,6 +327,13 @@
   }
 }
 
+// Hide connector that follows a hidden top new-row
+.roadmap-row--new:not(.roadmap-row--visible) + .row-connector {
+  height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
 .roadmap-row {
   display: flex;
   flex-direction: column;

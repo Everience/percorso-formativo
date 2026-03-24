@@ -90,9 +90,11 @@
     <div class="roadmap-viewport" cdkDropListGroup>
       @for (rowGroup of displayRows(); track rowGroup.row; let first = $first) {
         @if (isNewRow(rowGroup)) {
-          <div class="row-connector" [class.row-connector--visible]="isDragging()" aria-hidden="true">
-            <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="var(--admin-border)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
-          </div>
+          @if (!first) {
+            <div class="row-connector" [class.row-connector--visible]="isDragging()" aria-hidden="true">
+              <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="var(--admin-border)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+            </div>
+          }
           <div class="roadmap-row roadmap-row--new" [class.roadmap-row--visible]="isDragging()">
             <span class="roadmap-row__label roadmap-row__label--new">
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>

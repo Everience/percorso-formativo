@@ -57,7 +57,11 @@ export class Courses implements OnInit, OnDestroy {
   readonly displayRows = computed(() => {
     const rows = this.activeRows();
     const maxRow = rows.length > 0 ? Math.max(...rows.map(r => r.row)) : 0;
-    return [...rows, { row: maxRow + 1, courses: [] as AdminCourse[] }];
+    return [
+      { row: 0, courses: [] as AdminCourse[] },
+      ...rows,
+      { row: maxRow + 1, courses: [] as AdminCourse[] },
+    ];
   });
 
   readonly activeRowsCount = computed(() =>
