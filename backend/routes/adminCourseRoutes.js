@@ -7,6 +7,7 @@ const adminCourseController = require('../controllers/adminCourseController');
 
 router.get('/', verificaAdmin, adminCourseController.getAllCoursesPaginated);
 router.post('/', verificaAdmin, validate(schemas.createCourse), adminCourseController.createCourse);
+router.get('/:id/completions', verificaAdmin, adminCourseController.getCourseCompletions);
 router.get('/:id', verificaAdmin, adminCourseController.getCourseDetail);
 router.patch('/:id', verificaAdmin, validate(schemas.updateCourse), adminCourseController.updateCourse);
 router.delete('/:id', verificaAdmin, adminCourseController.deleteCourse);

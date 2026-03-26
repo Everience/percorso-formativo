@@ -27,6 +27,10 @@ export const adminRoutes: Routes = [
                 loadComponent: () => import('./pages/course-detail/course-detail').then(m => m.CourseDetail),
             },
             {
+                path: 'courses/:id/completions',
+                loadComponent: () => import('./pages/course-completions/course-completions').then(m => m.CourseCompletions),
+            },
+            {
                 path: 'manual',
                 loadComponent: () => import('./pages/manual/admin-manual').then(m => m.AdminManual),
             },

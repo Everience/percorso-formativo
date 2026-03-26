@@ -83,7 +83,7 @@
     </div>
     <div class="ranking-list">
       @for (course of d.completion.topCourses; track course.id; let i = $index) {
-      <a class="rank-item" [routerLink]="['/admin/courses', course.id]">
+      <a class="rank-item" [routerLink]="['/admin/courses', course.id, 'completions']">
         <span class="rank-num rank-num--green">{{ i + 1 }}</span>
         <div class="rank-item__info">
           <span class="rank-item__title">{{ cleanTitle(course.title) }}</span>
@@ -110,7 +110,7 @@
     </div>
     <div class="ranking-list">
       @for (course of d.completion.bottomCourses; track course.id; let i = $index) {
-      <a class="rank-item" [routerLink]="['/admin/courses', course.id]">
+      <a class="rank-item" [routerLink]="['/admin/courses', course.id, 'completions']">
         <span class="rank-num rank-num--amber">{{ i + 1 }}</span>
         <div class="rank-item__info">
           <span class="rank-item__title">{{ cleanTitle(course.title) }}</span>
@@ -150,7 +150,7 @@
       <span class="th-pct">Completati</span>
     </div>
     @for (course of courseRows(d.courseStats); track course.id) {
-    <a class="table-row" [routerLink]="['/admin/courses', course.id]">
+    <a class="table-row" [routerLink]="['/admin/courses', course.id, 'completions']">
       <span class="td-title">{{ cleanTitle(course.title) }}</span>
       <span class="td-cat">
         <span class="badge" [class]="'badge--' + course.category.toLowerCase()">{{ course.category }}</span>

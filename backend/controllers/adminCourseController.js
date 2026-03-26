@@ -47,6 +47,57 @@ exports.getCourseDetail = async (req, res) => {
     }
 };
 
+exports.getCourseCompletions = async (req, res) => {
+    try {
+        const courseId = Number(req.params.id);
+        if (!Number.isInteger(courseId) || courseId < 1) {
+            return res.status(400).json({ message: 'ID corso non valido' });
+        }
+        const course = await CourseModel.findById(courseId);
+        if (!course) return res.status(404).json({ message: 'Corso non trovato' });
+
+        const rows = await CourseModel.findCompletionRowsByCourseId(courseId);
+        let completed = 0;
+        let inProgress = 0;
+        let notStarted = 0;
+        for (const row of rows) {
+            const s = (row.status || 'not_started').toString();
+            if (s === 'completed') completed += 1;
+            else if (s === 'in_progress') inProgress += 1;
+            else notStarted += 1;
+        }
+        const total = rows.length;
+
+        res.status(200).json({
+            course: {
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                category: (course.category || '').toString().toUpperCase(),
+                position_row: course.position_row,
+                display_order: course.display_order,
+            },
+            summary: {
+                total,
+                completed,
+                inProgress,
+                notStarted,
+            },
+            rows: rows.map((r) => ({
+                user_id: r.user_id,
+                first_name: r.first_name,
+                last_name: r.last_name,
+                email: r.email,
+                role: r.role,
+                status: (r.status || 'not_started').toString(),
+            })),
+        });
+    } catch (error) {
+        console.error('Errore Admin Course Completions:', error);
+        res.status(500).json({ message: 'Errore nel recupero degli avanzamenti' });
+    }
+};
+
 exports.createCourse = async (req, res) => {
     try {
         const { title, category } = req.body;

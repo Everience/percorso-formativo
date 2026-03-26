@@ -1,0 +1,143 @@
+<a [routerLink]="['/admin/courses', id()]" class="back-link">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  Torna al corso
+</a>
+
+@if (loading()) {
+<div class="loading-state">
+  <div class="spinner"></div>
+  <span>Caricamento avanzamenti...</span>
+</div>
+} @else if (error(); as err) {
+<div class="error-panel">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+  <p>{{ err }}</p>
+  <a [routerLink]="['/admin/courses', id()]" class="primary-btn primary-btn--inline">Vai al dettaglio corso</a>
+</div>
+} @else if (course(); as c) {
+
+<header class="hero">
+  <div class="hero__visual" [class.hero__visual--cert]="isCertification()" [innerHTML]="formatTitle(c.title)"></div>
+  <div class="hero__body">
+    <p class="hero__eyebrow">Avanzamento utenti</p>
+    <h1>{{ cleanTitle(c.title) }}</h1>
+    <div class="hero__tags">
+      <span class="cat-chip" [class]="'cat-chip--' + (c.category || '').toLowerCase()">{{ c.category }}</span>
+      <span class="pos-chip">R{{ c.position_row }}.{{ c.display_order }}</span>
+      @if (isCertification()) {
+        <span class="cert-chip">Certificazione</span>
+      }
+    </div>
+    <p class="hero__lead">
+      Panoramica dello stato segnalato da ogni utente per questo corso. I valori riflettono l’ultimo aggiornamento salvato nella piattaforma.
+    </p>
+  </div>
+</header>
+
+<section class="summary-card">
+  <div class="summary-card__grid">
+    <div class="summary-metric">
+      <span class="summary-metric__value summary-metric__value--accent">{{ summary().total }}</span>
+      <span class="summary-metric__label">Utenti coinvolti</span>
+    </div>
+    <div class="summary-metric">
+      <span class="summary-metric__value summary-metric__value--green">{{ summary().completed }}</span>
+      <span class="summary-metric__label">Completati</span>
+    </div>
+    <div class="summary-metric">
+      <span class="summary-metric__value summary-metric__value--amber">{{ summary().inProgress }}</span>
+      <span class="summary-metric__label">In corso</span>
+    </div>
+    <div class="summary-metric">
+      <span class="summary-metric__value summary-metric__value--muted">{{ summary().notStarted }}</span>
+      <span class="summary-metric__label">Da iniziare</span>
+    </div>
+  </div>
+  <div class="summary-bar" aria-hidden="true">
+    <div class="summary-bar__track">
+      <div class="summary-bar__seg summary-bar__seg--completed" [style.width.%]="barSegments().completed"></div>
+      <div class="summary-bar__seg summary-bar__seg--progress" [style.width.%]="barSegments().inProgress"></div>
+      <div class="summary-bar__seg summary-bar__seg--pending" [style.width.%]="barSegments().notStarted"></div>
+    </div>
+  </div>
+  <div class="summary-card__footer">
+    <span class="rate-pill">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+      Tasso completamento <strong>{{ completionRate() }}%</strong>
+    </span>
+    <div class="legend">
+      <span class="legend__item"><span class="dot dot--completed"></span> Completato</span>
+      <span class="legend__item"><span class="dot dot--progress"></span> In corso</span>
+      <span class="legend__item"><span class="dot dot--not-started"></span> Da iniziare</span>
+    </div>
+  </div>
+</section>
+
+<section class="users-card">
+  <div class="toolbar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Cerca per nome, cognome o email..." [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" />
+      @if (searchQuery()) {
+      <button type="button" class="search-box__clear" (click)="clearSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      }
+    </div>
+    <div class="filter-group">
+      <button type="button" class="chip" [class.chip--active]="statusFilter() === 'all'" (click)="setFilter('all')">Tutti</button>
+      <button type="button" class="chip chip--st-complete" [class.chip--active]="statusFilter() === 'completed'" (click)="setFilter('completed')">
+        <span class="chip__dot"></span>Completati
+      </button>
+      <button type="button" class="chip chip--st-progress" [class.chip--active]="statusFilter() === 'in_progress'" (click)="setFilter('in_progress')">
+        <span class="chip__dot"></span>In corso
+      </button>
+      <button type="button" class="chip chip--st-pending" [class.chip--active]="statusFilter() === 'not_started'" (click)="setFilter('not_started')">
+        <span class="chip__dot"></span>Da iniziare
+      </button>
+    </div>
+    <span class="toolbar__count"><strong>{{ tableRows().length }}</strong> utenti</span>
+  </div>
+
+  @if (tableRows().length === 0) {
+  <div class="empty-state">Nessun utente corrisponde ai filtri selezionati.</div>
+  } @else {
+  <div class="col-head">
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('last_name')">
+      Utente <span class="sort-icon">{{ sortIcon('last_name') }}</span>
+    </span>
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('email')">
+      Email <span class="sort-icon">{{ sortIcon('email') }}</span>
+    </span>
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('role')">
+      Ruolo <span class="sort-icon">{{ sortIcon('role') }}</span>
+    </span>
+    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('status')">
+      Stato <span class="sort-icon">{{ sortIcon('status') }}</span>
+    </span>
+  </div>
+
+  @for (row of tableRows(); track row.user_id) {
+  <div class="row row--static">
+    <span class="row__user">
+      <span class="avatar">{{ userInitials(row) }}</span>
+      <span class="user-name">{{ fullName(row) }}</span>
+    </span>
+    <span class="row__email">{{ row.email }}</span>
+    <span class="row__role">
+      <span [class]="roleClass(row.role)">{{ mapRole(row.role) }}</span>
+    </span>
+    <span class="row__status">
+      <span class="dot" [class]="statusDot(row.status)"></span>
+      <span [class]="statusPillClass(row.status)">{{ statusText(row.status) }}</span>
+    </span>
+  </div>
+  }
+  }
+</section>
+
+}

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { PaginatedResponse, AdminCourse, AdminResource } from '../../models/admin.model';
+import { PaginatedResponse, AdminCourse, AdminResource, CourseCompletionsResponse } from '../../models/admin.model';
 
 export interface CourseListParams {
     page?: number;
@@ -30,6 +30,10 @@ export class AdminCourseService {
 
     getCourseById(id: number): Observable<AdminCourse> {
         return this.http.get<AdminCourse>(`${this.base}/${id}`);
+    }
+
+    getCourseCompletions(id: number): Observable<CourseCompletionsResponse> {
+        return this.http.get<CourseCompletionsResponse>(`${this.base}/${id}/completions`);
     }
 
     createCourse(data: Partial<AdminCourse>): Observable<{ message: string; id: number }> {

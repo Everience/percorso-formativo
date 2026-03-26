@@ -45,6 +45,26 @@ export interface UserProgress {
     status: string;
 }
 
+export interface CourseCompletionRow {
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: string;
+    status: string;
+}
+
+export interface CourseCompletionsResponse {
+    course: AdminCourse;
+    summary: {
+        total: number;
+        completed: number;
+        inProgress: number;
+        notStarted: number;
+    };
+    rows: CourseCompletionRow[];
+}
+
 export interface CourseStats {
     id: number;
     title: string;

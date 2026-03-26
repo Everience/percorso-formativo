@@ -235,6 +235,35 @@ class CourseModel {
         return result.rowsAffected[0] > 0;
     }
 
+    static async findCompletionRowsByCourseId(courseId) {
+        const pool = await poolPromise;
+        const query = `
+            SELECT
+                u.id AS user_id,
+                u.first_name,
+                u.last_name,
+                u.email,
+                u.role,
+                COALESCE(up.status, 'not_started') AS status
+            FROM Users u
+            LEFT JOIN UserProgress up
+                ON up.user_id = u.id AND up.course_id = @courseId
+            WHERE u.role IS NOT NULL AND u.role <> 'admin'
+            ORDER BY
+                CASE COALESCE(up.status, 'not_started')
+                    WHEN 'completed' THEN 1
+                    WHEN 'in_progress' THEN 2
+                    ELSE 3
+                END,
+                u.last_name ASC,
+                u.first_name ASC
+        `;
+        const result = await pool.request()
+            .input('courseId', sql.Int, courseId)
+            .query(query);
+        return result.recordset;
+    }
+
     static async getAnalytics() {
         const pool = await poolPromise;
 

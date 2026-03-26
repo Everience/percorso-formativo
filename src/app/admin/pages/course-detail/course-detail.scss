@@ -15,6 +15,11 @@
 /* ── Header with v1.0 preview ── */
 
 .course-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
   padding: 1.35rem 1.65rem;
   border-radius: 0.875rem;
   background: var(--admin-bg-card);
@@ -26,6 +31,8 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    flex: 1;
+    min-width: min(100%, 280px);
   }
 
   &__preview {
@@ -67,12 +74,76 @@
     align-items: center;
     gap: 0.4rem;
   }
+
+  &__completions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(135deg, rgba(232, 70, 124, 0.06), rgba(139, 92, 246, 0.06));
+    border: 1px solid rgba(232, 70, 124, 0.22);
+    max-width: 22rem;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+
+    &:hover {
+      border-color: rgba(232, 70, 124, 0.45);
+      box-shadow: 0 4px 20px -8px rgba(81, 34, 208, 0.35);
+      transform: translateY(-1px);
+    }
+  }
+
+  &__completions-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.55rem;
+    background: var(--admin-accent-soft);
+    color: var(--admin-accent);
+    flex-shrink: 0;
+  }
+
+  &__completions-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    text-align: left;
+  }
+
+  &__completions-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--admin-text);
+    line-height: 1.2;
+  }
+
+  &__completions-sub {
+    font-size: 0.68rem;
+    color: var(--admin-text-tertiary);
+    line-height: 1.35;
+  }
+
+  &__completions-chevron {
+    flex-shrink: 0;
+    color: var(--admin-text-tertiary);
+    transition: transform 0.15s, color 0.15s;
+  }
+
+  &__completions:hover &__completions-chevron {
+    color: var(--admin-accent);
+    transform: translateX(2px);
+  }
 }
 
 .cat-chip {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.6rem 0.25rem;
+  padding: 0.25rem 0.6rem 0.2rem;
   border-radius: 1rem;
   font-size: 0.67rem;
   font-weight: 700;
@@ -174,6 +245,7 @@
   .hint {
     text-transform: none;
     letter-spacing: 0;
+    font-size: 0.72rem;
     font-weight: 400;
     font-style: italic;
     color: var(--admin-text-tertiary);
