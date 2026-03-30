@@ -116,13 +116,14 @@
     <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('role')">
       Ruolo <span class="sort-icon">{{ sortIcon('role') }}</span>
     </span>
-    <span class="col-head__cell col-head__cell--sort" (click)="toggleSort('status')">
+    <span class="col-head__cell col-head__cell--sort col-head__cell--stato" (click)="toggleSort('status')">
       Stato <span class="sort-icon">{{ sortIcon('status') }}</span>
     </span>
+    <span class="col-head__cell"></span>
   </div>
 
   @for (row of tableRows(); track row.user_id) {
-  <div class="row row--static">
+  <a class="row" [routerLink]="['/admin/users', row.user_id]">
     <span class="row__user">
       <span class="avatar">{{ userInitials(row) }}</span>
       <span class="user-name">{{ fullName(row) }}</span>
@@ -135,7 +136,13 @@
       <span class="dot" [class]="statusDot(row.status)"></span>
       <span [class]="statusPillClass(row.status)">{{ statusText(row.status) }}</span>
     </span>
-  </div>
+    <span class="row__arrow">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </span>
+  </a>
   }
   }
 </section>

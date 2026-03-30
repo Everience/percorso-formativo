@@ -304,9 +304,9 @@
 
 /* ── Users list shell (aligned with /admin/users) ── */
 
-$completions-grid-cols: minmax(11.5rem, 1.35fr) minmax(12rem, 1.4fr) 5.75rem minmax(10rem, 1.28fr);
+$completions-grid-cols: minmax(11.5rem, 1.35fr) minmax(12rem, 1.4fr) 5.75rem minmax(10rem, 1.28fr) 32px;
 /* Extra air between Ruolo and Stato only (header + body stay matched) */
-$completions-role-status-gap: 10rem;
+$completions-role-status-gap: 0.45rem;
 
 .users-card {
   border-radius: 0.875rem;
@@ -482,7 +482,7 @@ $completions-role-status-gap: 10rem;
     }
   }
 
-  &__cell:last-child {
+  &__cell--stato {
     padding-inline-start: $completions-role-status-gap;
   }
 }
@@ -502,7 +502,9 @@ $completions-role-status-gap: 10rem;
   row-gap: 0.35rem;
   padding: 0.7rem 1.25rem;
   align-items: center;
+  text-decoration: none;
   color: inherit;
+  cursor: pointer;
   border-bottom: 1px solid var(--admin-border-light);
   position: relative;
   transition: background 0.1s;
@@ -523,16 +525,21 @@ $completions-role-status-gap: 10rem;
     border-bottom: none;
   }
 
-  &--static {
-    cursor: default;
-  }
-
-  &--static:hover {
+  &:hover {
     background: var(--admin-hover);
 
     &::before {
       background: var(--admin-accent);
     }
+
+    .row__arrow svg {
+      color: var(--admin-accent);
+      transform: translateX(2px);
+    }
+  }
+
+  &:active {
+    background: var(--admin-active);
   }
 
   &__user {
@@ -561,6 +568,18 @@ $completions-role-status-gap: 10rem;
     gap: 0.45rem;
     min-width: 0;
     padding-inline-start: $completions-role-status-gap;
+  }
+
+  &__arrow {
+    display: flex;
+    justify-content: flex-end;
+
+    svg {
+      color: var(--admin-text-tertiary);
+      transition:
+        color 0.15s,
+        transform 0.15s;
+    }
   }
 }
 
