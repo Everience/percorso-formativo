@@ -1,5 +1,9 @@
 const { sql, poolPromise } = require('../config/db');
 
+/** Same cohort as UserModel admin list / completions (normalized match). */
+const SQL_U_IS_APP_USER =
+    "LOWER(LTRIM(RTRIM(ISNULL(u.role, '')))) IN ('dev-user', 'tech-user')";
+
 class CourseModel {
     static async findById(id) {
         const pool = await poolPromise;
@@ -248,7 +252,7 @@ class CourseModel {
             FROM Users u
             LEFT JOIN UserProgress up
                 ON up.user_id = u.id AND up.course_id = @courseId
-            WHERE u.role IS NOT NULL AND u.role <> 'admin'
+            WHERE ${SQL_U_IS_APP_USER}
             ORDER BY
                 CASE COALESCE(up.status, 'not_started')
                     WHEN 'completed' THEN 1
@@ -275,14 +279,16 @@ class CourseModel {
             FROM Courses
         `);
 
+        /* Only count progress for dev-user / tech-user (same cohort as admin analytics totalUsers). */
         const statsResult = await pool.request().query(`
             SELECT
                 c.id, c.title, c.category, c.description, c.position_row, c.display_order,
-                SUM(CASE WHEN up.status = 'completed' THEN 1 ELSE 0 END) as completed_count,
-                SUM(CASE WHEN up.status = 'in_progress' THEN 1 ELSE 0 END) as in_progress_count,
-                SUM(CASE WHEN up.status = 'not_started' THEN 1 ELSE 0 END) as not_started_count
+                SUM(CASE WHEN up.status = 'completed' AND u.id IS NOT NULL THEN 1 ELSE 0 END) as completed_count,
+                SUM(CASE WHEN up.status = 'in_progress' AND u.id IS NOT NULL THEN 1 ELSE 0 END) as in_progress_count,
+                SUM(CASE WHEN up.status = 'not_started' AND u.id IS NOT NULL THEN 1 ELSE 0 END) as not_started_count
             FROM Courses c
             LEFT JOIN UserProgress up ON c.id = up.course_id
+            LEFT JOIN Users u ON u.id = up.user_id AND (${SQL_U_IS_APP_USER})
             GROUP BY c.id, c.title, c.category, c.description, c.position_row, c.display_order
             ORDER BY c.category ASC, c.position_row ASC, c.display_order ASC
         `);

@@ -18,9 +18,11 @@ export class AdminUserService {
     private readonly base = `${environment.apiUrl}/api/admin/users`;
 
     getUsers(params: UserListParams = {}): Observable<PaginatedResponse<AdminUser>> {
-        let httpParams = new HttpParams();
-        if (params.page) httpParams = httpParams.set('page', params.page);
-        if (params.limit) httpParams = httpParams.set('limit', params.limit);
+        const page = params.page ?? 1;
+        const limit = params.limit ?? 12;
+        let httpParams = new HttpParams()
+            .set('page', String(page))
+            .set('limit', String(limit));
         if (params.q) httpParams = httpParams.set('q', params.q);
         if (params.role) httpParams = httpParams.set('role', params.role);
         if (params.sort) httpParams = httpParams.set('sort', params.sort);

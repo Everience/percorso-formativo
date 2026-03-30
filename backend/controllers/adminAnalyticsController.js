@@ -16,7 +16,10 @@ exports.getOverview = async (req, res) => {
 
     const devUsers = Number(userStats.dev_count || 0);
     const techUsers = Number(userStats.tech_count || 0);
-    const totalUsers = devUsers + techUsers;
+    const totalUsers =
+      userStats.total != null && !Number.isNaN(Number(userStats.total))
+        ? Number(userStats.total)
+        : devUsers + techUsers;
 
     console.log(`[Analytics] devUsers=${devUsers}, techUsers=${techUsers}, totalUsers=${totalUsers}`);
 

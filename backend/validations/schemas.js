@@ -1,9 +1,9 @@
 const Joi = require('joi');
 
 const updateUserRole = Joi.object({
-    role: Joi.string().valid('dev', 'tech', 'admin').required().messages({
+    role: Joi.string().valid('dev', 'tech').required().messages({
         'any.required': 'Il ruolo è obbligatorio',
-        'any.only': 'Ruolo non valido. Valori ammessi: dev, tech, admin',
+        'any.only': 'Ruolo non valido. Valori ammessi: dev, tech',
     }),
 });
 

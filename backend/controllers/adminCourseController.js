@@ -1,4 +1,5 @@
 const CourseModel = require('../models/courseModel');
+const UserModel = require('../models/userModel');
 const MAX_COURSES_PER_ROW = 4;
 
 exports.getAllCoursesPaginated = async (req, res) => {
@@ -56,7 +57,11 @@ exports.getCourseCompletions = async (req, res) => {
         const course = await CourseModel.findById(courseId);
         if (!course) return res.status(404).json({ message: 'Corso non trovato' });
 
-        const rows = await CourseModel.findCompletionRowsByCourseId(courseId);
+        const rawRows = await CourseModel.findCompletionRowsByCourseId(courseId);
+        const rows = rawRows.filter((r) => UserModel.isAppUserRole(r.role));
+        if (rows.length !== rawRows.length) {
+            console.error('[admin] completion rows included non-app roles; stripped from response');
+        }
         let completed = 0;
         let inProgress = 0;
         let notStarted = 0;

@@ -1,7 +1,11 @@
 export interface PaginatedResponse<T> {
     data: T[];
     meta: {
+        /** Rows matching search + role chip (pagination). */
         totalItems: number;
+        /** DEV+TECH cohort total; same definition as dashboard KPI `users.total`. */
+        appUsersTotal?: number;
+        appUsersByRole?: { dev: number; tech: number };
         currentPage: number;
         totalPages: number;
         limit: number;

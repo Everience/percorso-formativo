@@ -32,7 +32,7 @@
         <span class="chip__dot"></span>TECH
       </button>
     </div>
-    <span class="toolbar__count"><strong>{{ meta().totalItems }}</strong> utenti</span>
+    <span class="toolbar__count"><strong>{{ toolbarUserCount() }}</strong> utenti</span>
   </div>
 
   <!-- ─── Data ─── -->
@@ -76,7 +76,7 @@
   <div class="empty-state">Nessun utente trovato</div>
   }
 
-  @if (meta().totalPages > 1) {
+  @if (meta().pagingItemTotal > listPageSize && meta().totalPages > 1) {
   <div class="pagination">
     <button class="page-btn" [disabled]="meta().currentPage <= 1" (click)="goToPage(meta().currentPage - 1)">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"

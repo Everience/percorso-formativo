@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminCourseService } from '../../services/admin-course.service';
 import { AdminCourse, CourseCompletionRow } from '../../../models/admin.model';
+import { isAdminListableDbRole } from '../../utils/admin-app-user-roles';
 
 type StatusFilter = 'all' | 'completed' | 'in_progress' | 'not_started';
 
@@ -114,12 +115,22 @@ export class CourseCompletions implements OnInit {
         this.courseService.getCourseCompletions(courseId).subscribe({
             next: (res) => {
                 this.course.set(res.course);
-                this.rows.set(res.rows);
+                const rows = res.rows.filter((r) => isAdminListableDbRole(r.role));
+                let completed = 0;
+                let inProgress = 0;
+                let notStarted = 0;
+                for (const row of rows) {
+                    const s = (row.status || 'not_started').toString();
+                    if (s === 'completed') completed += 1;
+                    else if (s === 'in_progress') inProgress += 1;
+                    else notStarted += 1;
+                }
+                this.rows.set(rows);
                 this.summary.set({
-                    total: res.summary.total,
-                    completed: res.summary.completed,
-                    inProgress: res.summary.inProgress,
-                    notStarted: res.summary.notStarted,
+                    total: rows.length,
+                    completed,
+                    inProgress,
+                    notStarted,
                 });
                 this.loading.set(false);
             },

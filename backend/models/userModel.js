@@ -1,6 +1,17 @@
 const { sql, poolPromise } = require('../config/db');
 
+/**
+ * Normalized role match (SQL Server): same cohort as completions page.
+ * Handles different casing / accidental whitespace in `Users.role`.
+ */
+const ROLE_NORM_SQL = "LOWER(LTRIM(RTRIM(ISNULL(role, ''))))";
+const APP_USER_ROLES_CLAUSE = `${ROLE_NORM_SQL} IN ('dev-user', 'tech-user')`;
+
 class UserModel {
+    static isAppUserRole(role) {
+        const r = (role == null ? '' : String(role)).trim().toLowerCase();
+        return r === 'dev-user' || r === 'tech-user';
+    }
     static async findById(id) {
         const pool = await poolPromise;
         const result = await pool.request()
@@ -48,33 +59,34 @@ class UserModel {
     static async countAdminUsers(searchQuery, roleFilter) {
         const pool = await poolPromise;
         const request = pool.request();
-        let query = "SELECT COUNT(*) as total FROM Users WHERE role IS NOT NULL AND role != 'admin'";
+        let query = `SELECT COUNT(*) as total FROM Users WHERE ${APP_USER_ROLES_CLAUSE}`;
 
         if (searchQuery) {
             query += ' AND (first_name LIKE @search OR last_name LIKE @search OR email LIKE @search)';
             request.input('search', sql.NVarChar, `%${searchQuery}%`);
         }
         if (roleFilter) {
-            query += ' AND role = @role';
-            request.input('role', sql.NVarChar, roleFilter);
+            query += ` AND ${ROLE_NORM_SQL} = @roleNorm`;
+            request.input('roleNorm', sql.NVarChar, String(roleFilter).trim().toLowerCase());
         }
 
         const result = await request.query(query);
-        return result.recordset[0].total;
+        const raw = result.recordset[0]?.total;
+        return Math.trunc(Number(raw ?? 0) || 0);
     }
 
     static async findAdminUsers(searchQuery, roleFilter, offset, limit, sortColumn, sortOrder) {
         const pool = await poolPromise;
         const request = pool.request();
-        let query = "SELECT id, first_name, last_name, email, role, uid FROM Users WHERE role IS NOT NULL AND role != 'admin'";
+        let query = `SELECT id, first_name, last_name, email, role, uid FROM Users WHERE ${APP_USER_ROLES_CLAUSE}`;
 
         if (searchQuery) {
             query += ' AND (first_name LIKE @search OR last_name LIKE @search OR email LIKE @search)';
             request.input('search', sql.NVarChar, `%${searchQuery}%`);
         }
         if (roleFilter) {
-            query += ' AND role = @role';
-            request.input('role', sql.NVarChar, roleFilter);
+            query += ` AND ${ROLE_NORM_SQL} = @roleNorm`;
+            request.input('roleNorm', sql.NVarChar, String(roleFilter).trim().toLowerCase());
         }
 
         const validColumns = ['id', 'first_name', 'last_name', 'email', 'role'];
@@ -90,17 +102,35 @@ class UserModel {
         return result.recordset;
     }
 
-    static async getAnalytics() {
+    /**
+     * Same cohort as dashboard KPI (dev-user + tech-user only).
+     * Optional search narrows like the users list search; omit for full DB cohort.
+     */
+    static async getCohortCounts(searchQuery) {
         const pool = await poolPromise;
-        const result = await pool.request().query(`
+        const request = pool.request();
+        let query = `
             SELECT
-                SUM(CASE WHEN role = 'dev-user' THEN 1 ELSE 0 END) as dev_count,
-                SUM(CASE WHEN role = 'tech-user' THEN 1 ELSE 0 END) as tech_count,
-                COUNT(*) as total
+                SUM(CASE WHEN ${ROLE_NORM_SQL} = 'dev-user' THEN 1 ELSE 0 END) AS dev_count,
+                SUM(CASE WHEN ${ROLE_NORM_SQL} = 'tech-user' THEN 1 ELSE 0 END) AS tech_count,
+                COUNT(*) AS total
             FROM Users
-            WHERE role IN ('dev-user', 'tech-user')
-        `);
-        return result.recordset[0];
+            WHERE ${APP_USER_ROLES_CLAUSE}`;
+        if (searchQuery) {
+            query += ' AND (first_name LIKE @search OR last_name LIKE @search OR email LIKE @search)';
+            request.input('search', sql.NVarChar, `%${searchQuery}%`);
+        }
+        const result = await request.query(query);
+        const row = result.recordset[0] || {};
+        const dev = Math.trunc(Number(row.dev_count ?? 0) || 0);
+        const tech = Math.trunc(Number(row.tech_count ?? 0) || 0);
+        /** Always dev + tech (ignore SQL COUNT(*) drift with NULL SUM edge cases). */
+        const total = dev + tech;
+        return { dev_count: dev, tech_count: tech, total };
+    }
+
+    static async getAnalytics() {
+        return this.getCohortCounts('');
     }
 
     static async updateRole(userId, newRole) {
