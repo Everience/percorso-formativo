@@ -1,9 +1,9 @@
 const UserModel = require('../models/userModel');
 const { sendWelcomeEmail } = require('../services/emailService');
+const { checkIfEmployeeExists } = require('../services/factorialService');
 
-// Maps frontend role names to DB values and vice-versa
 const ROLE_TO_DB = { dev: 'dev-user', tech: 'tech-user' };
-const ROLE_FROM_DB = { 'dev-user': 'dev', 'tech-user': 'tech', admin: 'admin' };
+const ROLE_FROM_DB = { 'dev-user': 'dev', 'tech-user': 'tech' };
 
 function mapRoleFromDB(user) {
     if (!user) return user;
@@ -48,7 +48,6 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-//sarebbe il register
 exports.addUserToDB = async (req, res) => {
     try {
         const uidFirebase = req.user.uid;
@@ -63,7 +62,19 @@ exports.addUserToDB = async (req, res) => {
             return res.status(409).json({ message: 'Utente già registrato nel database' });
         }
 
-        // Convert frontend role ('dev'/'tech') to DB value ('dev-user'/'tech-user')
+        try {
+            const isEmployee = await checkIfEmployeeExists(email);
+            if (!isEmployee) {
+                return res.status(403).json({ 
+                    message: 'Accesso negato: questa email non fa parte dell\'azienda.' 
+                });
+            }
+        } catch (factorialError) {
+            return res.status(502).json({ 
+                message: factorialError.message
+            });
+        }
+        
         const dbRole = ROLE_TO_DB[role];
         if (!dbRole) {
             return res.status(400).json({ message: `Ruolo non valido: ${role}` });

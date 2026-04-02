@@ -1,9 +1,5 @@
 const { sql, poolPromise } = require('../config/db');
 
-/**
- * Normalized role match (SQL Server): same cohort as completions page.
- * Handles different casing / accidental whitespace in `Users.role`.
- */
 const ROLE_NORM_SQL = "LOWER(LTRIM(RTRIM(ISNULL(role, ''))))";
 const APP_USER_ROLES_CLAUSE = `${ROLE_NORM_SQL} IN ('dev-user', 'tech-user')`;
 
@@ -32,7 +28,6 @@ class UserModel {
         const { firstName, lastName, email, role, uid } = userData;
         const pool = await poolPromise;
 
-        // Query che inserisce l'utente e converte automaticamente il ruolo in ID
         const query = `
             INSERT INTO Users (first_name, last_name, email, role, uid)
             VALUES (
@@ -102,10 +97,6 @@ class UserModel {
         return result.recordset;
     }
 
-    /**
-     * Same cohort as dashboard KPI (dev-user + tech-user only).
-     * Optional search narrows like the users list search; omit for full DB cohort.
-     */
     static async getCohortCounts(searchQuery) {
         const pool = await poolPromise;
         const request = pool.request();
@@ -124,7 +115,6 @@ class UserModel {
         const row = result.recordset[0] || {};
         const dev = Math.trunc(Number(row.dev_count ?? 0) || 0);
         const tech = Math.trunc(Number(row.tech_count ?? 0) || 0);
-        /** Always dev + tech (ignore SQL COUNT(*) drift with NULL SUM edge cases). */
         const total = dev + tech;
         return { dev_count: dev, tech_count: tech, total };
     }
