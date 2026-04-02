@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 import { AuthService } from '../../../services/auth.service';
+import { getBackendErrorMessage, isFirebaseAuthError } from '../../../utils/backend-api-error';
 
 type Role = 'dev' | 'tech';
 
@@ -73,19 +75,37 @@ export class Signup {
     try {
       await this.authService.signUp(firstName, lastName, email, password, role);
       this.router.navigate(['/login']);
-    } catch (err: any) {
-      const code = err?.code || '';
-      if (code === 'auth/email-already-in-use') {
-        this.signupError.set('Email già registrata. Effettua il login.');
-      } else if (code === 'auth/weak-password') {
-        this.signupError.set('La password deve avere almeno 6 caratteri.');
-      } else if (code === 'auth/invalid-email') {
-        this.signupError.set('Indirizzo email non valido.');
-      } else if (err?.status === 409) {
-        this.signupError.set('Utente già presente nel sistema.');
-      } else {
-        this.signupError.set('Errore durante la registrazione. Riprova.');
+    } catch (err: unknown) {
+      if (isFirebaseAuthError(err)) {
+        switch (err.code) {
+          case 'auth/email-already-in-use':
+            this.signupError.set('Email già registrata. Effettua il login.');
+            break;
+          case 'auth/weak-password':
+            this.signupError.set('La password deve avere almeno 6 caratteri.');
+            break;
+          case 'auth/invalid-email':
+            this.signupError.set('Indirizzo email non valido.');
+            break;
+          default:
+            this.signupError.set('Errore durante la registrazione. Riprova.');
+        }
+        return;
       }
+
+      if (err instanceof HttpErrorResponse) {
+        const apiText = getBackendErrorMessage(err);
+        if (apiText) {
+          this.signupError.set(apiText);
+          return;
+        }
+        if (err.status === 0) {
+          this.signupError.set('Impossibile contattare il server. Controlla la connessione.');
+          return;
+        }
+      }
+
+      this.signupError.set('Errore durante la registrazione. Riprova.');
     } finally {
       this.loading.set(false);
     }

@@ -9,6 +9,7 @@ import {
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
     signOut,
+    deleteUser,
     onAuthStateChanged,
     User as FirebaseUser,
 } from 'firebase/auth';
@@ -87,16 +88,25 @@ export class AuthService {
         const credential = await createUserWithEmailAndPassword(this.auth, email, password);
         const token = await credential.user.getIdToken();
 
-        await firstValueFrom(
-            this.http.post<AppUser>(`${environment.apiUrl}/api/users`, {
-                firstName,
-                lastName,
-                email,
-                role,
-            }, {
-                headers: { Authorization: `Bearer ${token}` },
-            }),
-        );
+        try {
+            await firstValueFrom(
+                this.http.post<AppUser>(`${environment.apiUrl}/api/users`, {
+                    firstName,
+                    lastName,
+                    email,
+                    role,
+                }, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+            );
+        } catch (apiError) {
+            try {
+                await deleteUser(credential.user);
+            } catch (rollbackErr) {
+                console.error('Signup rollback: impossibile eliminare utente Firebase dopo errore API', rollbackErr);
+            }
+            throw apiError;
+        }
 
         await signOut(this.auth);
         this.currentUser.set(null);
