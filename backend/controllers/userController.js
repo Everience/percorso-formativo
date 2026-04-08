@@ -57,6 +57,12 @@ exports.addUserToDB = async (req, res) => {
             return res.status(400).json({ message: 'Dati mancanti (UID o Email)' });
         }
 
+        if (!firstName || firstName.trim() === '' || !lastName || lastName.trim() === '') {
+            return res.status(400).json({ 
+                message: 'Dati mancanti: Nome e Cognome sono obbligatori e non possono essere vuoti.' 
+            });
+        }
+
         const existingUser = await UserModel.findByUid(uidFirebase);
         if (existingUser) {
             return res.status(409).json({ message: 'Utente già registrato nel database' });
@@ -83,8 +89,8 @@ exports.addUserToDB = async (req, res) => {
         const newUserId = await UserModel.addUserToDB({
             uid: uidFirebase,
             email,
-            firstName: firstName || 'Nuovo',
-            lastName: lastName || 'Utente',
+            firstName: firstName.trim(), 
+            lastName: lastName.trim(),
             role: dbRole
         });
 
