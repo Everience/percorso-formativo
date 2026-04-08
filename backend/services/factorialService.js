@@ -17,7 +17,8 @@ const checkIfEmployeeExists = async (email) => {
 
             const response = await axios.get(FACTORIAL_API_URL, {
                 headers: {
-                    'x-api-key': process.env.FACTORIAL_API_KEY,
+                    'Authorization': `Bearer ${process.env.FACTORIAL_API_KEY}`,
+                    //'x-api-key': process.env.FACTORIAL_API_KEY,
                     'Accept': 'application/json'
                 },
                 params: params
