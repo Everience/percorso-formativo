@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { employeeRoadmapHome } from '../utils/employee-roadmap-home';
 
 export const adminGuard: CanActivateFn = async () => {
     const auth = inject(AuthService);
@@ -15,8 +16,7 @@ export const adminGuard: CanActivateFn = async () => {
     }
 
     if (auth.userRole() !== 'admin') {
-        const role = auth.userRole();
-        return router.createUrlTree([`/${role ?? 'dev'}`]);
+        return router.createUrlTree([employeeRoadmapHome(auth.userRole())]);
     }
 
     return true;

@@ -24,7 +24,7 @@ export interface AppUser {
     first_name: string;
     last_name: string;
     email: string;
-    role: 'dev' | 'tech' | 'admin';
+    role: 'dev' | 'tech' | 'admin' | 'service-manager';
 }
 
 @Injectable({ providedIn: 'root' })

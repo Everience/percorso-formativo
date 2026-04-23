@@ -3,11 +3,16 @@ const { sendWelcomeEmail } = require('../services/emailService');
 const { checkIfEmployeeExists } = require('../services/factorialService');
 
 const ROLE_TO_DB = { dev: 'dev-user', tech: 'tech-user' };
-const ROLE_FROM_DB = { 'dev-user': 'dev', 'tech-user': 'tech' };
+const ROLE_FROM_DB = {
+    'dev-user': 'dev',
+    'tech-user': 'tech',
+    'service-manager': 'service-manager',
+};
 
 function mapRoleFromDB(user) {
     if (!user) return user;
-    return { ...user, role: ROLE_FROM_DB[user.role] || user.role };
+    const key = (user.role == null ? '' : String(user.role)).trim().toLowerCase();
+    return { ...user, role: ROLE_FROM_DB[key] ?? user.role };
 }
 
 exports.getUserById = async (req, res) => {

@@ -3,11 +3,9 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AdminUserService } from '../../services/admin-user.service';
-import { AdminAnalyticsService } from '../../services/admin-analytics.service';
 import { AdminUser, PaginatedResponse } from '../../../models/admin.model';
 import { isAdminListableMappedRole } from '../../utils/admin-app-user-roles';
 
-/** Fixed page size: pagination only when more than this many users (13+). */
 const USERS_LIST_PAGE_SIZE = 12;
 
 @Component({
@@ -17,22 +15,17 @@ const USERS_LIST_PAGE_SIZE = 12;
   styleUrl: './users.scss',
 })
 export class Users implements OnInit, OnDestroy {
-  /** Exposed for template (pagination only when totalItems exceeds this). */
   readonly listPageSize = USERS_LIST_PAGE_SIZE;
 
   private readonly userService = inject(AdminUserService);
-  private readonly analyticsService = inject(AdminAnalyticsService);
   private readonly searchSubject = new Subject<string>();
-
-  /** Same `users.total` as dashboard KPI (DEV+TECH); loaded from /api/admin/analytics. */
-  private readonly dashboardUsersTotal = signal<number | null>(null);
 
   readonly users = signal<AdminUser[]>([]);
   readonly loading = signal(true);
   readonly meta = signal({
     totalItems: 0,
     appUsersTotal: 0,
-    /** Rows used for pager math (cohort total on “Tutti” without search). */
+    /** Total records for current filter (matches server pagination denominator). */
     pagingItemTotal: 0,
     currentPage: 1,
     totalPages: 1,
@@ -44,10 +37,6 @@ export class Users implements OnInit, OnDestroy {
   currentSort = 'last_name';
 
   ngOnInit(): void {
-    this.analyticsService.getOverview().subscribe({
-      next: (d) => this.dashboardUsersTotal.set(Math.trunc(Number(d.users?.total) || 0)),
-      error: () => this.dashboardUsersTotal.set(null),
-    });
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -79,24 +68,11 @@ export class Users implements OnInit, OnDestroy {
         const nApp = Number(m.appUsersTotal);
         const appTotal =
           m.appUsersTotal != null && !Number.isNaN(nApp) ? Math.trunc(nApp) : listTotal;
-        /**
-         * “Tutti” + no search: pager must follow DEV+TECH cohort (appUsersTotal), same as toolbar.
-         * Otherwise listTotal can disagree (e.g. inflated COUNT) → fake 2nd page + half-empty rows after client filter.
-         */
         const noSearch = !this.searchQuery.trim();
         const pagingItemTotal =
           this.roleFilter === '' && noSearch ? appTotal : listTotal;
-        const totalPages =
-          pagingItemTotal <= 0
-            ? 0
-            : Math.ceil(pagingItemTotal / USERS_LIST_PAGE_SIZE);
-        const serverPage = Math.trunc(Number(m.currentPage) || 1);
-        let currentPage = serverPage;
-        if (totalPages > 0) {
-          currentPage = Math.min(Math.max(1, serverPage), totalPages);
-        } else {
-          currentPage = 1;
-        }
+        const totalPages = Math.max(0, Math.trunc(Number(m.totalPages) || 0));
+        const currentPage = Math.max(1, Math.trunc(Number(m.currentPage) || 1));
         this.meta.set({
           totalItems: listTotal,
           appUsersTotal: appTotal,
@@ -105,10 +81,6 @@ export class Users implements OnInit, OnDestroy {
           totalPages,
           limit: USERS_LIST_PAGE_SIZE,
         });
-        if (serverPage !== currentPage) {
-          this.loadUsers();
-          return;
-        }
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -149,19 +121,12 @@ export class Users implements OnInit, OnDestroy {
     return '';
   }
 
-  /**
-   * Toolbar count: with no search and “Tutti”, use dashboard analytics `users.total` (authoritative).
-   * With search only: cohort from users list API. With DEV/TECH chip: paginated subset total.
-   */
+  /** Toolbar total: same source as pagination (`meta` from list API — no second request). */
   toolbarUserCount(): number {
     const m = this.meta();
     const noSearch = !this.searchQuery.trim();
     if (this.roleFilter === '' && noSearch) {
-      const dash = this.dashboardUsersTotal();
-      if (dash != null) return dash;
-    }
-    if (this.roleFilter === '') {
-      return m.appUsersTotal;
+      return m.pagingItemTotal;
     }
     return m.totalItems;
   }
@@ -186,10 +151,14 @@ export class Users implements OnInit, OnDestroy {
   get pages(): number[] {
     const m = this.meta();
     const arr: number[] = [];
-    if (m.totalPages < 1) return arr;
+    if (m.totalPages < 1) {
+      return arr;
+    }
     const start = Math.max(1, m.currentPage - 2);
     const end = Math.min(m.totalPages, m.currentPage + 2);
-    for (let i = start; i <= end; i++) arr.push(i);
+    for (let i = start; i <= end; i++) {
+      arr.push(i);
+    }
     return arr;
   }
 

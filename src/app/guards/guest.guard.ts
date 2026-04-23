@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { employeeRoadmapHome } from '../utils/employee-roadmap-home';
 
 export const guestGuard: CanActivateFn = async () => {
     const auth = inject(AuthService);
@@ -18,7 +19,7 @@ export const guestGuard: CanActivateFn = async () => {
     if (role === 'admin') {
         return router.createUrlTree(['/admin']);
     }
-    return router.createUrlTree([`/${role ?? 'dev'}`]);
+    return router.createUrlTree([employeeRoadmapHome(role)]);
 };
 
 function waitUntilReady(auth: AuthService): Promise<void> {

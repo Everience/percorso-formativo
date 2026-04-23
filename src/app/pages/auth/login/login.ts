@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router, RouterLink } from '@angular/router';
 import { form, FormField, required } from '@angular/forms/signals';
 import { AuthService } from '../../../services/auth.service';
+import { employeeRoadmapHome } from '../../../utils/employee-roadmap-home';
 
 interface LoginData {
   username: string;
@@ -61,7 +62,7 @@ export class Login {
       if (user.role === 'admin') {
         this.router.navigate(['/admin']);
       } else {
-        this.router.navigate([`/${user.role}`]);
+        this.router.navigate([employeeRoadmapHome(user.role)]);
       }
     } catch (err: any) {
       const code = err?.code || '';
